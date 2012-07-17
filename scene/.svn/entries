@@ -1,0 +1,193 @@
+10
+
+dir
+190
+http://192.168.1.100/newsvn/ThreeCard/trunk/source/Game/scene
+http://192.168.1.100/newsvn/ThreeCard
+
+
+
+2012-06-27T07:53:14.445610Z
+189
+zongk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+28fe7948-9298-4fe1-985d-3db6df642cb9
+
+ELSComm.cpp
+file
+0
+
+
+add
+
+GameLayerPlayELS.cpp
+file
+0
+
+
+add
+
+ELSSaveData.h
+file
+0
+
+
+add
+
+ELSSaveFile.cpp
+file
+0
+
+
+add
+
+ELSDefine.h
+file
+0
+
+
+add
+
+ELSComm.h
+file
+0
+
+
+add
+
+GameLayerPlayELS.h
+file
+0
+
+
+add
+
+GameLayer_Render.cpp
+file
+0
+
+
+add
+
+AnimationLayerPlayELS.cpp
+file
+0
+
+
+add
+
+help
+dir
+
+GameLayer_MoveBlock.cpp
+file
+0
+
+
+add
+
+AnimationLayerPlayELS.h
+file
+0
+
+
+add
+
+gamelayer.h
+file
+0
+
+
+add
+
+GameLayer_Net.cpp
+file
+0
+
+
+add
+
+palyELS.h
+file
+0
+
+
+add
+
+ameScenePlayELS.h
+file
+0
+
+
+add
+
+GameLayer_TouchKey.cpp
+file
+0
+
+
+add
+
+GameScenePlayELS.cpp
+file
+0
+
+
+add
+
+menu
+dir
+
+wait
+dir
+
+play
+dir
+
+PopLayerPlayELS.cpp
+file
+0
+
+
+add
+
+GameScenePlayELS.h
+file
+0
+
+
+add
+
+login
+dir
+
+PopLayerPlayELS.h
+file
+0
+
+
+add
+
+loading
+dir
+
+ELSSaveData.cpp
+file
+0
+
+
+add
+

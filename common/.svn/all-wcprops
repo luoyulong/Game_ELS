@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/newsvn/ThreeCard/!svn/ver/190/trunk/source/Game/common
+END
+GameApp.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/common/GameApp.h
+END
+AppDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/newsvn/ThreeCard/!svn/ver/36/trunk/source/Game/common/AppDelegate.h
+END
+GameNetCenter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/newsvn/ThreeCard/!svn/ver/183/trunk/source/Game/common/GameNetCenter.cpp
+END
+AppDelegate.mm
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/newsvn/ThreeCard/!svn/ver/190/trunk/source/Game/common/AppDelegate.mm
+END
+GameNetCenter.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/newsvn/ThreeCard/!svn/ver/180/trunk/source/Game/common/GameNetCenter.h
+END
+EAGLView.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/newsvn/ThreeCard/!svn/ver/33/trunk/source/Game/common/EAGLView.h
+END
+MainViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/common/MainViewController.h
+END
+IAPManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/common/IAPManager.h
+END
+EAGLView.mm
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/newsvn/ThreeCard/!svn/ver/187/trunk/source/Game/common/EAGLView.mm
+END
+GameApp.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/common/GameApp.cpp
+END
+MainViewController.mm
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/common/MainViewController.mm
+END
+IAPManager.mm
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/common/IAPManager.mm
+END

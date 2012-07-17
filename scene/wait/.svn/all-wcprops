@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/newsvn/ThreeCard/!svn/ver/153/trunk/source/Game/scene/wait
+END
+GameStateWaiting.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/newsvn/ThreeCard/!svn/ver/43/trunk/source/Game/scene/wait/GameStateWaiting.h
+END
+GameStateWaiting.mm
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/newsvn/ThreeCard/!svn/ver/153/trunk/source/Game/scene/wait/GameStateWaiting.mm
+END

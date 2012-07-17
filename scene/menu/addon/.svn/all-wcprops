@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/newsvn/ThreeCard/!svn/ver/187/trunk/source/Game/scene/menu/addon
+END
+MenuLayerFAQ.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/menu/addon/MenuLayerFAQ.h
+END
+MenuLayerFriend.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/newsvn/ThreeCard/!svn/ver/12/trunk/source/Game/scene/menu/addon/MenuLayerFriend.h
+END
+MenuLayerMsg.mm
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/newsvn/ThreeCard/!svn/ver/187/trunk/source/Game/scene/menu/addon/MenuLayerMsg.mm
+END
+MenuLayerFAQ.mm
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/newsvn/ThreeCard/!svn/ver/187/trunk/source/Game/scene/menu/addon/MenuLayerFAQ.mm
+END
+MenuLayerFriend.mm
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/newsvn/ThreeCard/!svn/ver/187/trunk/source/Game/scene/menu/addon/MenuLayerFriend.mm
+END
+MenuLayerActs.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/newsvn/ThreeCard/!svn/ver/12/trunk/source/Game/scene/menu/addon/MenuLayerActs.h
+END
+MenuLayerActs.mm
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/newsvn/ThreeCard/!svn/ver/187/trunk/source/Game/scene/menu/addon/MenuLayerActs.mm
+END
+MenuLayerStore.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/newsvn/ThreeCard/!svn/ver/58/trunk/source/Game/scene/menu/addon/MenuLayerStore.h
+END
+MenuLayerStore.mm
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/newsvn/ThreeCard/!svn/ver/187/trunk/source/Game/scene/menu/addon/MenuLayerStore.mm
+END
+UILabelStrikeThrough.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/menu/addon/UILabelStrikeThrough.h
+END
+UILabelStrikeThrough.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/menu/addon/UILabelStrikeThrough.m
+END
+AddonWrapper.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/newsvn/ThreeCard/!svn/ver/12/trunk/source/Game/scene/menu/addon/AddonWrapper.h
+END
+MenuLayerMsg.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/newsvn/ThreeCard/!svn/ver/12/trunk/source/Game/scene/menu/addon/MenuLayerMsg.h
+END
+AddonWrapper.mm
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/newsvn/ThreeCard/!svn/ver/58/trunk/source/Game/scene/menu/addon/AddonWrapper.mm
+END

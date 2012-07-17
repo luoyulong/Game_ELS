@@ -1,0 +1,398 @@
+/*
+ *  GEStateConnect.cpp
+ *  Dice0
+ *
+ *  Created by F.K. on 12-4-26.
+ *  Copyright 2012 __GameSnow_. All rights reserved.
+ *
+ */
+#include "GameStateShortConnect.h"
+#include "GlobalData.h"
+#include "gameNetCenter.h"
+#include "AddTableView.h"
+#include "warningMessageWrapper.h"
+
+GameStateShortConnect* GameStateShortConnect::m_pSelf=0;
+
+GameStateShortConnect* GameStateShortConnect::GetInstance()
+{
+    if (m_pSelf==0) {
+        m_pSelf = new GameStateShortConnect();
+    }
+    return m_pSelf;
+}
+
+
+GameStateShortConnect::GameStateShortConnect()
+{
+    GEScene* pScene = GEDirector::GetInstance()->createScene("StateConnect");
+    pScene->addChild(this);
+    printf("StateConnect is:%p\n",pScene);
+    
+    m_pShortNet = GENet::netWithTarget(this, net_selector(GameStateShortConnect::netShortCallBack));
+}
+
+GameStateShortConnect::~GameStateShortConnect()
+{
+    if (m_pShortNet) {
+        delete m_pShortNet;
+    }
+}
+
+void GameStateShortConnect::sendMsg(const char *msg, GENet *p_Net)
+{
+    cJSON *read;
+    read=cJSON_Parse(msg);
+    if (read==0) {
+        printf("sendMsg, json data format error!\n");
+    }
+    else {
+        p_Net->setMsg(msg);
+        p_Net->reqConn(SERVERIP, SHORTPORT, NULL);
+    }
+}
+
+void GameStateShortConnect::quickStartReq(const char *deviceId)
+{
+    printf("Quick Start Command!\n");
+    
+    memset(m_cNetRequest, 0, NET_CONNECT_BUFFER);
+    sprintf(m_cNetRequest, "{\"cmd\":\"RS_QUICK_START\",\"params\":{\"userId\":\"%s\",\"gameId\":1}, \"cmdId\":1}\r\n", deviceId);
+    sendMsg(m_cNetRequest, m_pShortNet);
+}
+
+void GameStateShortConnect::logInFromSina(const char* usrId, const char* nick_name, const char* picurl)
+{
+    printf("LogIn From Sina!\n");
+    
+    memset(m_cNetRequest, 0, NET_CONNECT_BUFFER);
+    sprintf(m_cNetRequest, "{\"cmd\":\"RS_LOGIN\", \"params\":{ \"snsId\":\"sina:%s\",\"name\":\"%s\",\"picurl\":\"%s\",\"gameId\":1,\"friends\":[\"\", \"\"], \"version\":\"1.0\"},\"cmdId\":1}\r\n", usrId, nick_name, picurl);
+    
+    
+    sendMsg(m_cNetRequest, m_pShortNet);
+}
+
+void GameStateShortConnect::logInFromTourist(const char* deviceId, const char* deviceType)
+{
+    printf("LogIn As a Toursit !\n");
+    
+    memset(m_cNetRequest, 0, NET_CONNECT_BUFFER);
+    sprintf(m_cNetRequest, "{\"cmd\":\"RS_LOGIN\", \"params\":{ \"snsId\":\"%s\",\"picurl\":\"\",\"name\":\"%s Player\",\"gameId\":1,\"friends\":[\"\", \"\"], \"version\":\"1.0\"},\"cmdId\":1}\r\n",deviceId, deviceType);
+    sendMsg(m_cNetRequest, m_pShortNet);
+}
+
+void GameStateShortConnect::message(int msgType){
+    memset(m_cNetRequest, 0, NET_CONNECT_BUFFER);
+    sprintf(m_cNetRequest, "{\"cmd\":\"RS_MSG\", \"params\":{\"gameId\":1,\"userId\":%d,\"type\":%d},\"cmdId\":1}\r\n",g_user.uid, msgType);
+    sendMsg(m_cNetRequest, m_pShortNet);
+}
+
+
+
+void GameStateShortConnect::rewards()
+{
+    memset(m_cNetRequest, 0, NET_CONNECT_BUFFER);
+    sprintf(m_cNetRequest, "{\"cmd\":\"RS_MEDAL\", \"params\":{\"gameId\":1,\"userId\":%d},\"cmdId\":1}\r\n",g_user.uid);
+    sendMsg(m_cNetRequest, m_pShortNet);
+}
+
+void GameStateShortConnect::isReward(int i)//是否领取奖励
+{
+    memset(m_cNetRequest, 0, NET_CONNECT_BUFFER);
+    sprintf(m_cNetRequest, "{\"cmd\":\"RS_MEDAL_REWARD\", \"params\":{\"gameId\":1,\"userId\":%d,\"medalId\":%d},\"cmdId\":1}\r\n",g_user.uid,i+1);
+    sendMsg(m_cNetRequest, m_pShortNet);
+}
+
+
+
+void GameStateShortConnect::acts(){
+    //待定
+}
+
+void GameStateShortConnect::store(){
+    //None
+}
+
+void GameStateShortConnect::friends(){
+    memset(m_cNetRequest, 0, NET_CONNECT_BUFFER);
+    sprintf(m_cNetRequest, "{\"cmd\":\"RS_FRIENDS\", \"params\":{ \"gameId\":1,\"userId\":%d},\"cmdId\":1}\r\n",g_user.uid);
+    sendMsg(m_cNetRequest, m_pShortNet);
+}
+
+void GameStateShortConnect::feedback(const char *msg){
+    memset(m_cNetRequest, 0, NET_CONNECT_BUFFER);
+    sprintf(m_cNetRequest, "{\"cmd\":\"RS_FEEDBACK\", \"params\":{ \"gameId\":1,\"userId\":%d, \"msg\":%s},\"cmdId\":1}\r\n",g_user.uid, msg);
+    sendMsg(m_cNetRequest, m_pShortNet);
+}
+
+/*
+ *  处理服务器返回的短连接消息消息
+ */
+void GameStateShortConnect::netShortCallBack(const char* msg)
+{    
+    printf("msg=%s, msglen=%d\n", msg, (int)strlen(msg));
+    cJSON *read;
+    read=cJSON_Parse(msg);
+    
+    printf("server back msg!!\n%s", cJSON_Print(read));
+    
+    if(read == 0)
+    {
+        printf("json format error!!\n");
+        return;
+    }
+    if (cJSON_GetObjectItem(read, "cmd")==NULL) {
+        //信息错误
+        printf("no cmd.\n");
+        return;
+    }
+    if (strcmp(cJSON_GetObjectItem(read, "cmd")->valuestring,"SS_LOGIN")==0) {
+        printf("\n****************\nlog in ok.\n****************\n");
+        
+        cJSON *result, *udata, *gdata;
+        result=cJSON_GetObjectItem(read, "result");
+        udata=cJSON_GetObjectItem(result, "udata");
+        gdata=cJSON_GetObjectItem(result, "gdata");
+        
+        g_user.uid=atoi(cJSON_GetArrayItem(udata, 0)->valuestring);
+        g_user.coin=cJSON_GetArrayItem(udata, 1)->valueint;
+        snprintf(g_user.picture_url, 256, "%s", cJSON_GetArrayItem(udata, 2)->valuestring);
+        snprintf(g_user.passwd, 256, "%s", cJSON_GetArrayItem(udata, 3)->valuestring);
+        g_user.state = cJSON_GetArrayItem(udata, 4)->valueint;
+        
+        snprintf(g_user.lastlogin, 64, "%s", cJSON_GetArrayItem(gdata, 0)->valuestring);
+        g_user.nslogin=cJSON_GetArrayItem(gdata, 1)->valueint;
+        char *cardColorNum=cJSON_GetArrayItem(gdata, 2)->valuestring;
+        printf("====%s====\n", cardColorNum);
+        if (cardColorNum[0]=='\0') {
+            for (int i=0; i<3; i++) {
+                g_user.maxcard.color[i]=NULL;
+                g_user.maxcard.number[i]=0;
+            }
+        }
+        else {
+            for (int i=0; i<3; i++) {
+                g_user.maxcard.color[i]=*cardColorNum;
+                g_user.maxcard.number[i]=*(cardColorNum+1);
+                cardColorNum=strchr(cardColorNum, ',');
+            }
+        }
+ 
+        g_user.maxscore=cJSON_GetArrayItem(gdata, 3)->valueint;
+        g_user.maxwinchip=cJSON_GetArrayItem(gdata, 4)->valueint;
+        g_user.chip=cJSON_GetArrayItem(gdata, 5)->valueint;
+        g_user.experience=cJSON_GetArrayItem(gdata, 6)->valuedouble;
+        g_user.level=cJSON_GetArrayItem(gdata, 7)->valueint;
+
+        char *strStart = cJSON_GetArrayItem(gdata, 8)->valuestring;
+        char *pos = strchr(cJSON_GetArrayItem(gdata, 8)->valuestring, ',');
+        *pos='\0';
+        g_user.winrate[0]=atoi(strStart);  //cJSON_GetArrayItem(gdata, 3)->child->valueint;
+        g_user.winrate[1]=atoi(pos+1);
+        
+        GEDirector::GetInstance()->gotoScene("StateMainMenu", MoveToLeft, 0.7);
+        g_user.nslogin=3;//Test
+        if (g_user.nslogin>0) {
+            loginLayerRewardReloadData();
+            loginLayerRewardShow();
+        }
+    }
+    
+    if (strcmp(cJSON_GetObjectItem(read, "cmd")->valuestring,"SS_QUICK_START")==0) {
+        printf("\n****************\n game quick start ok.\n****************\n");
+        
+        cJSON *result;
+        result=cJSON_GetObjectItem(read, "result");
+        
+        char *pos;
+        char *strStart=cJSON_GetObjectItem(result, "loc")->valuestring;
+        
+        for (int i=0; i<3; i++) {
+            
+            pos=strchr(strStart, '.');
+            if (pos != NULL) {
+                *pos='\0';
+                g_user.location[i]=atoi(strStart);
+                strStart=pos+1;
+            }
+            else{
+                g_table_info.tid=atoi(strStart);
+                g_user.location[i]=atoi(strStart);
+            }
+        }
+        g_user.location[3]=0;
+        gameNetCenter::GetInstance()->quickStart(g_user.location[1], g_user.location[2]);
+    }
+    //系统或个人信息
+    if (strcmp(cJSON_GetObjectItem(read, "cmd")->valuestring, "SS_MSG")==0) {
+        cJSON *result, *msg;
+        result =cJSON_GetObjectItem(read, "result");
+        msg = cJSON_GetObjectItem(result, "msg");
+        g_message.count=cJSON_GetArraySize(msg);
+        for (int i=0; i<g_message.count; i++) {
+            snprintf(g_message.date[i], 256, "%s", cJSON_GetArrayItem(cJSON_GetArrayItem(msg, i), 0)->valuestring);
+            snprintf(g_message.message[i], 256, "%s", cJSON_GetArrayItem(cJSON_GetArrayItem(msg, i), 1)->valuestring);
+        }
+        
+        reloadMsgData();
+    }
+    //好友信息
+    if (strcmp(cJSON_GetObjectItem(read, "cmd")->valuestring, "SS_FRIENDS")==0) {
+        if (g_friend_list.size()>0) {
+            for (int i=0; i<g_friend_list.size(); i++) {
+                free(g_friend_list.at(i));
+            }
+        }
+        g_friend_list.clear();
+        
+        cJSON *result, *friends;
+        result = cJSON_GetObjectItem(read, "result");
+        friends = cJSON_GetObjectItem(result, "friends");
+        
+        cJSON *c=friends->child;
+        while (c) {
+            USER_INFO *userInfo=(USER_INFO*)malloc(sizeof(USER_INFO));
+            userInfo->uid = atoi(c->string);
+            cJSON *friendlist=cJSON_GetObjectItem(friends, c->string);
+            
+            strcpy(userInfo->name, cJSON_GetArrayItem(friendlist, 0)->valuestring);
+            snprintf(userInfo->picture_url, 256, "%s",cJSON_GetArrayItem(friendlist, 1)->valuestring);
+            userInfo->coin=cJSON_GetArrayItem(friendlist, 2)->valueint;
+            userInfo->level=cJSON_GetArrayItem(friendlist, 3)->valueint;
+            
+            //winrate[2]
+            char *strStart = cJSON_GetArrayItem(friendlist, 4)->valuestring;
+            char *pos = strchr(cJSON_GetArrayItem(friendlist, 4)->valuestring, ',');
+            *pos='\0';
+            userInfo->winrate[0]=atoi(strStart);
+            userInfo->winrate[1]=atoi(pos+1);
+            
+            //location[4]
+            strStart=cJSON_GetArrayItem(friendlist, 5)->valuestring;
+            
+            if (strcmp(strStart,"offline")==0) {//offline时location各项都置为0
+                for (int i=0; i<4; i++) {
+                    userInfo->location[i]=0;
+                }
+            }
+            else {                              //不为offline时
+                for (int i=0; i<4; i++) {
+                    pos=strchr(strStart, '.');
+                    if (pos != NULL) {
+                        *pos='\0';
+                        userInfo->location[i]=atoi(strStart);
+                        strStart=pos+1;
+                    }
+                    else{
+                        userInfo->location[i]=atoi(strStart);
+                    }
+                }
+            }
+
+            g_friend_list.push_back(userInfo);
+            c=c->next;
+        }
+        reloadFriendData();
+        printf("=============== g_friend_list size=%lu=================\n",g_friend_list.size());
+    }
+    
+    if (strcmp(cJSON_GetObjectItem(read, "cmd")->valuestring, "SS_STORE")) {
+        //暂时没有该消息
+    }
+    
+    if (strcmp(cJSON_GetObjectItem(read, "cmd")->valuestring, "SS_FEEDBACK")==0) {
+        char *feedback;
+        feedback=cJSON_GetObjectItem(cJSON_GetObjectItem(read, "result"), "ret")->valuestring;
+        if (strcmp(feedback, "ok")==0) {
+            m_bFeedback=TRUE;
+        }
+    }
+    
+    //领取奖励信息
+    if (strcmp(cJSON_GetObjectItem(read, "cmd")->valuestring, "SS_MEDAL")==0) {
+        printf("MEDAL*********************\n");
+        cJSON *result, *medals;
+        result =cJSON_GetObjectItem(read, "result");
+        medals = cJSON_GetObjectItem(result, "medal");
+        g_rewardInfo.count=cJSON_GetArraySize(medals);
+        for (int i=0; i<g_rewardInfo.count; i++) {
+            
+            g_rewardInfo.medalId[i]=cJSON_GetArrayItem(cJSON_GetArrayItem(medals, i), 0)->valueint;
+            snprintf(g_rewardInfo.picture_url[i], 256, "%s", cJSON_GetArrayItem(cJSON_GetArrayItem(medals, i), 1)->valuestring);
+            
+            snprintf(g_rewardInfo.name[i], 256, "%s", cJSON_GetArrayItem(cJSON_GetArrayItem(medals, i), 2)->valuestring);
+            snprintf(g_rewardInfo.desc[i], 256, "%s", cJSON_GetArrayItem(cJSON_GetArrayItem(medals, i), 3)->valuestring);
+            
+            g_rewardInfo.reward[i]=cJSON_GetArrayItem(cJSON_GetArrayItem(medals, i), 4)->valueint;
+            g_rewardInfo.finish[i]=cJSON_GetArrayItem(cJSON_GetArrayItem(medals, i), 5)->valueint;
+            g_rewardInfo.total[i]=cJSON_GetArrayItem(cJSON_GetArrayItem(medals, i), 6)->valueint;
+            //g_rewardInfo.state[i]=cJSON_GetArrayItem(cJSON_GetArrayItem(medals, i), 7)->valueint;
+            g_rewardInfo.state[i]=0;
+            printf(" 是否处理成就1消息");
+        }
+        
+        reloadMedalData();
+    }
+    
+    //点击领取奖励按钮
+    if (strcmp(cJSON_GetObjectItem(read, "cmd")->valuestring, "SS_MEDAL_REWARD")==0) {
+        cJSON *error, *result, *rewards, *coins,*isMedalIds, *info;
+        result =cJSON_GetObjectItem(read, "result");
+        
+        if (!result)//测试代码
+        {
+            error = cJSON_GetObjectItem(read, "error");
+            if (error) {
+                info=cJSON_GetObjectItem(error, "info");
+                if(info) {
+                    printf("GET MEDAL REWARD error is %s\n", info->valuestring);
+                }
+            }
+            
+            g_isReward.reward = 200;    
+            g_rewardInfo.state[10]=1;
+            g_isReward.coin=200;
+            g_user.coin=g_isReward.coin;
+            reloadMedalData();
+            return;
+        }
+        
+        rewards = cJSON_GetObjectItem(result, "reward");
+        coins   =cJSON_GetObjectItem(result, "coin");
+        isMedalIds=cJSON_GetObjectItem(result, "medalId");
+//        g_isReward.rewardsCount =cJSON_GetArraySize(rewards);
+//        g_isReward.coinsCount=cJSON_GetArraySize(coins);
+        
+        g_isReward.reward = rewards->valueint;    
+        g_isReward.isMedalId=isMedalIds->valueint;
+        g_isReward.coin=coins->valueint;
+        g_user.coin=g_isReward.coin;
+        
+        g_isReward.isMedalId=1;
+        //g_isReward.reward=cJSON_GetArrayItem(cJSON_GetArrayItem(rewards, 0), 0)->valueint; 
+        //g_isReward.coin=cJSON_GetArrayItem(cJSON_GetArrayItem(coins, 0), 1)->valueint;
+        reloadMedalData();
+    } 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

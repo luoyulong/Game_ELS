@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/newsvn/ThreeCard/!svn/ver/189/trunk/source/Game/scene/play
+END
+PlayLayerActChat.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/play/PlayLayerActChat.h
+END
+PlayLayerAction.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/newsvn/ThreeCard/!svn/ver/189/trunk/source/Game/scene/play/PlayLayerAction.cpp
+END
+GameStatePlay.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/newsvn/ThreeCard/!svn/ver/189/trunk/source/Game/scene/play/GameStatePlay.cpp
+END
+PlayLayerHeadInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/play/PlayLayerHeadInfo.cpp
+END
+PlayLayerAboveHead.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/newsvn/ThreeCard/!svn/ver/184/trunk/source/Game/scene/play/PlayLayerAboveHead.cpp
+END
+PlayLayerAddFriend.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/play/PlayLayerAddFriend.cpp
+END
+PlayLayerAction.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/newsvn/ThreeCard/!svn/ver/165/trunk/source/Game/scene/play/PlayLayerAction.h
+END
+GameStatePlay.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/newsvn/ThreeCard/!svn/ver/177/trunk/source/Game/scene/play/GameStatePlay.h
+END
+PlayLayerHeadInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/play/PlayLayerHeadInfo.h
+END
+PlayLayerAboveHead.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/newsvn/ThreeCard/!svn/ver/183/trunk/source/Game/scene/play/PlayLayerAboveHead.h
+END
+backtoroomwrapper.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/play/backtoroomwrapper.h
+END
+PlayLayerAddFriend.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/play/PlayLayerAddFriend.h
+END
+PlayLayerActFace.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/play/PlayLayerActFace.cpp
+END
+PlayLayerActFace.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/play/PlayLayerActFace.h
+END
+PlayLayerActBuyChip.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/play/PlayLayerActBuyChip.cpp
+END
+PlayLayerUnderHead.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/newsvn/ThreeCard/!svn/ver/143/trunk/source/Game/scene/play/PlayLayerUnderHead.cpp
+END
+PlayLayerActBuyChip.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/play/PlayLayerActBuyChip.h
+END
+PlayLayerActStand.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/play/PlayLayerActStand.cpp
+END
+PlayLayerHead.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/newsvn/ThreeCard/!svn/ver/171/trunk/source/Game/scene/play/PlayLayerHead.cpp
+END
+PlayLayerUnderHead.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/newsvn/ThreeCard/!svn/ver/74/trunk/source/Game/scene/play/PlayLayerUnderHead.h
+END
+backtoroomwrapper.mm
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/newsvn/ThreeCard/!svn/ver/135/trunk/source/Game/scene/play/backtoroomwrapper.mm
+END
+PlayLayerActStand.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/play/PlayLayerActStand.h
+END
+PlayLayerHead.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/newsvn/ThreeCard/!svn/ver/171/trunk/source/Game/scene/play/PlayLayerHead.h
+END
+PlayLayerActChat.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/play/PlayLayerActChat.cpp
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/newsvn/ThreeCard/!svn/ver/59/trunk/source/Game/common/warning
+END
+warningMessageWrapper.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/common/warning/warningMessageWrapper.h
+END
+warningMessageWrapper.mm
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/common/warning/warningMessageWrapper.mm
+END
+NetErrorAlertView.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/common/warning/NetErrorAlertView.h
+END
+NetErrorAlertView.mm
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/newsvn/ThreeCard/!svn/ver/59/trunk/source/Game/common/warning/NetErrorAlertView.mm
+END

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/newsvn/ThreeCard/!svn/ver/189/trunk/source/Game/scene/menu/help
+END
+CommonLayerHelpScrollView.mm
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/newsvn/ThreeCard/!svn/ver/53/trunk/source/Game/scene/menu/help/CommonLayerHelpScrollView.mm
+END
+CommonLayerHelp.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/newsvn/ThreeCard/!svn/ver/55/trunk/source/Game/scene/menu/help/CommonLayerHelp.h
+END
+CommonLayerHelpWrapper.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/newsvn/ThreeCard/!svn/ver/49/trunk/source/Game/scene/menu/help/CommonLayerHelpWrapper.h
+END
+CommonLayerHelp.mm
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/newsvn/ThreeCard/!svn/ver/187/trunk/source/Game/scene/menu/help/CommonLayerHelp.mm
+END
+CommonLayerHelpWrapper.mm
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/newsvn/ThreeCard/!svn/ver/189/trunk/source/Game/scene/menu/help/CommonLayerHelpWrapper.mm
+END
+CommonLayerHelpScrollView.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/newsvn/ThreeCard/!svn/ver/49/trunk/source/Game/scene/menu/help/CommonLayerHelpScrollView.h
+END

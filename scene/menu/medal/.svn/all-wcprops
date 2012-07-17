@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/newsvn/ThreeCard/!svn/ver/187/trunk/source/Game/scene/menu/medal
+END
+WrapperMedal.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/newsvn/ThreeCard/!svn/ver/7/trunk/source/Game/scene/menu/medal/WrapperMedal.h
+END
+MenuLayerMedal.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/newsvn/ThreeCard/!svn/ver/69/trunk/source/Game/scene/menu/medal/MenuLayerMedal.h
+END
+WrapperMedal.mm
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/newsvn/ThreeCard/!svn/ver/7/trunk/source/Game/scene/menu/medal/WrapperMedal.mm
+END
+MenuLayerMedal.mm
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/newsvn/ThreeCard/!svn/ver/187/trunk/source/Game/scene/menu/medal/MenuLayerMedal.mm
+END

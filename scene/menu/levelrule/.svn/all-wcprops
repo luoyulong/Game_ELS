@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/newsvn/ThreeCard/!svn/ver/18/trunk/source/Game/scene/menu/levelrule
+END
+WrapperLevelRule.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/newsvn/ThreeCard/!svn/ver/10/trunk/source/Game/scene/menu/levelrule/WrapperLevelRule.h
+END
+MenuLayerLevelRule.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/newsvn/ThreeCard/!svn/ver/18/trunk/source/Game/scene/menu/levelrule/MenuLayerLevelRule.h
+END
+WrapperLevelRule.mm
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/newsvn/ThreeCard/!svn/ver/10/trunk/source/Game/scene/menu/levelrule/WrapperLevelRule.mm
+END
+MenuLayerLevelRule.mm
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/newsvn/ThreeCard/!svn/ver/14/trunk/source/Game/scene/menu/levelrule/MenuLayerLevelRule.mm
+END

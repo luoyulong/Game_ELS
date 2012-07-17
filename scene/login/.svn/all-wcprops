@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/newsvn/ThreeCard/!svn/ver/189/trunk/source/Game/scene/login
+END
+LoginWrapper.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/newsvn/ThreeCard/!svn/ver/12/trunk/source/Game/scene/login/LoginWrapper.h
+END
+LoginLayerReward.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/newsvn/ThreeCard/!svn/ver/55/trunk/source/Game/scene/login/LoginLayerReward.h
+END
+LoginWrapper.mm
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/newsvn/ThreeCard/!svn/ver/12/trunk/source/Game/scene/login/LoginWrapper.mm
+END
+LoginLayerReward.mm
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/newsvn/ThreeCard/!svn/ver/59/trunk/source/Game/scene/login/LoginLayerReward.mm
+END
+GameStateLogin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/newsvn/ThreeCard/!svn/ver/189/trunk/source/Game/scene/login/GameStateLogin.cpp
+END
+GameStateShortConnect.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/newsvn/ThreeCard/!svn/ver/153/trunk/source/Game/scene/login/GameStateShortConnect.cpp
+END
+GameStateLogin.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/newsvn/ThreeCard/!svn/ver/98/trunk/source/Game/scene/login/GameStateLogin.h
+END
+GameStateShortConnect.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/newsvn/ThreeCard/!svn/ver/76/trunk/source/Game/scene/login/GameStateShortConnect.h
+END

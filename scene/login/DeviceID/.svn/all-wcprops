@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/login/DeviceID
+END
+UIDevice+IdentifierAddition.mm
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/login/DeviceID/UIDevice+IdentifierAddition.mm
+END
+DeviceIDWrapper.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/login/DeviceID/DeviceIDWrapper.h
+END
+DeviceWrapper.mm
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/login/DeviceID/DeviceWrapper.mm
+END
+NSString+MD5Addition.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/login/DeviceID/NSString+MD5Addition.h
+END
+NSString+MD5Addition.mm
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/login/DeviceID/NSString+MD5Addition.mm
+END
+UIDevice+IdentifierAddition.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/newsvn/ThreeCard/!svn/ver/1/trunk/source/Game/scene/login/DeviceID/UIDevice+IdentifierAddition.h
+END
