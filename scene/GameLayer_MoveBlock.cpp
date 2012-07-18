@@ -90,7 +90,7 @@ void GameLayerPlayELS::UpdateLevel(int oldscore, GSTAT *gp, int idx)
 	return;
 }
 
-
+//消除满行,clear_stage是为了实现消行动态闪烁效果
 int GameLayerPlayELS::ClearFullRows(int idx, bool ai)
 {   
 	int i, j, n, ret=0;
@@ -409,18 +409,15 @@ inline void GameLayerPlayELS::UpdateELS(int i)
 }
 void GameLayerPlayELS::FallWithUpdate(int i)
 {
-    printf("enter fallwithupdate\n");
+    printf("enter fallwithupdate and fallstat is %f\n",((AnimationLayerPlayELS *)Annimationlayer)->fallstat[0]);
     ((AnimationLayerPlayELS *)Annimationlayer)->fallstat[0]=-1;
-    int ii=0;
     do{
-        printf("step %d\n",ii++);
         if(mGS[0].game_over)
         break;
     }while(MoveBlk(DDOWN, 0, false)!=REACH_BOTTOM);
     NextBlk(0, false);
     TestDDown(0);
-     //printf("i am finish \n");
-}
+    }
 
 
 
@@ -857,24 +854,6 @@ void GameLayerPlayELS::PlayActionBase(char *act, int index)
     
    ((AnimationLayerPlayELS *)Annimationlayer)->Cancel_fall(index);
 
-    
-    
-	/*if (mGS[index].grect_stage>180) {
-		//printf("D..................gstage[%d]=%d\n", index, mGS[index].grect_stage);
-		//在直落执行过程中，如果收到其他指令，则立即终止直落计数器，完成直落
-		//然后执行下一个操作
-        
-        
-		mGS[index].grect_stage=180;
-		while(MoveBlk(DDOWN, index, false)!=REACH_BOTTOM)
-		{
-			if(mGS[index].game_over)
-				break;
-		}
-		NextBlk(index, false);
-		TestDDown(index);
-	}*/
-	
 
 	switch (aiact)
 	{
@@ -1071,7 +1050,6 @@ void GameLayerPlayELS::NextBlk(int idx, bool ai, bool issave)
 	//DumpELS(idx, "NEXT");
 	mGS[idx].block_index++;
 	mGS[idx].cur_block  = mGS[idx].next_block;
-    if(mGS[idx].cur_block>9) printf("block type is %d\n",mGS[idx].cur_block);
 	if (!issave)
 		mGS[idx].block_change_time = 10;//标记next里面的方块的移动
 	mGS[idx].cur_x=5, mGS[idx].cur_y=0, mGS[idx].cur_z=0;
@@ -1168,98 +1146,6 @@ inline void GameLayerPlayELS::UpdateColHoleTop(int idx, int gxs, int gxe)
  return ret;
  }
  */
-//消除满行,clear_stage是为了实现消行动态闪烁效果
-/*int GameLayerPlayELS::ClearFullRows(int idx, bool ai)
-{
-	int i, j, n, ret=0;
-	GSTAT *gp;
-	
-	gp = &mGS[idx];
-	if(gp->clear_stage==(SET_CLEAR_STAGE-REND_CLEAR_STAGE))
-	{
-		ret=1;
-		bool isItemFullRows=false;
-		if (gp->full_rows_count>100) {//道具造成的消行，不加分，不加攻击
-			isItemFullRows=true;
-		}
-		if(gp->full_rows_count%100)
-		{
-			//检测4行连消的情况
-			if (idx==0)
-				TestAchievement(mGS[0].full_rows_count%100);
-			//清除满行
-			//DumpELS(idx, "CLEAR");
-			for(n=0;n<gp->full_rows_count%100;n++)
-			{
-				for(i=gp->fullrows[n];i>=0;i--)
-					for(j=0;j<HENG;j++) 
-					{
-						int tmpitemtype=gp->grid[i][j+2];
-						if((tmpitemtype>150) && i==gp->fullrows[n])
-						{
-							tmpitemtype=tmpitemtype%150;
-							gp->score+=5;
-						//	UpdateLevel(gp->score-5, gp, idx);
-							if (idx == 0) {
-								//增加新ITEMMOVE到vector
-								ITEMMOVE new_itemmove;
-								new_itemmove.itemtype = tmpitemtype;
-                                int mainx=54,mainy=2;
-								new_itemmove.startx   =	mainx+10+(j+1)*blksize;//for retina
-								new_itemmove.starty   = mainy+100+i*blksize;//for retina
-								new_itemmove.endx	  = (GetButtonRecItem(tmpitemtype-1, 0)+GetButtonRecItem(tmpitemtype-1, 2))-5;
-								new_itemmove.endy	  = (GetButtonRecItem(tmpitemtype-1, 1)+GetButtonRecItem(tmpitemtype-1, 3));
-								new_itemmove.item_move_stage = 60;
-								mItemFly.push_back(new_itemmove);
-							}
-						}
-						if(i)
-						{
-							if(gp->grid[i-1][j+2]>100 || gp->grid[i-1][j+2]==0)
-							{
-								if(!(gp->grid[i][j+2]<10 && gp->grid[i][j+2]>0))
-									gp->grid[i][j+2]=gp->grid[i-1][j+2];
-							}
-							else
-								if(!(gp->grid[i][j+2]<10 && gp->grid[i][j+2]>0))
-									gp->grid[i][j+2]=0;
-						}
-						else
-						{
-							if(!(gp->grid[i][j+2]<10 && gp->grid[i][j+2]>0))
-								gp->grid[i][j+2]=0;
-						}
-					}
-				gp->fullrows[n]=0;
-			}
-			UpdateColHoleTop(idx, 2, 11);
-			if (!ai && !isItemFullRows) {
-				gp->attack[0]=gp->full_rows_count-1;
-				if(gp->combo>=3) gp->attack[0]++;
-				gp->attack[1]=gp->block_index;
-			}
-			DumpELS(idx, "AFTER CLEAR");
-		}
-		gp->full_rows_count=0;
-	} 
-	//解锁下一个试炼阵法
-	if (mElsMode==ELS_MODE_SINGLE && mBJIdx!=0) {
-		//printf("unlock:bjidx=%d topline=%d unbmp=%d\n", mBJIdx, gp->top_line, g_unlock_bmp);
-		if (gp->top_line<=2 && gp->unlock_stage==0) {
-			gp->unlock_stage=MAX_UNLOCK_STAGE;
-			WriteScore();
-			if (g_options[5]==0 && g_unlock_bmp>=16) {
-				//没有解锁就玩到16关
-			}
-			else if (g_unlock_bmp==mBJIdx && mBJIdx<=MAX_BMP_COUNT ) {//如果没有解锁，则不允许玩16关以后的关卡。
-				g_unlock_bmp++;
-			}
-		}
-	}
-	return ret;
-}
-*/
-
 /*
 //攻击对方
 void GameLayerPlayELS::Attack(int idx, int line, int spaceseed)
@@ -1721,7 +1607,7 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
                     }    
                     else    
                     {
-						//标注满行
+						//标注满行，检测满行信息 标记到fullrow里 同时标记full_rows_count
 						i=0;
 						for(m=0; m<4; m++)
 						{

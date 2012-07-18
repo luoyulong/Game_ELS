@@ -215,7 +215,6 @@ private:
     hgeParticleSystem *mParticleSystem, *mParticleSystem2;//粒子系统
    
     int mCountDownTimeLeft;//用于游戏开始前的倒计时
-    int mainx,mainy;
     
     CCRenderBox* mRender;
     

@@ -18,9 +18,9 @@ AnimationLayerPlayELS::AnimationLayerPlayELS()
     init=false;
     for (int i=0; i<4; i++) {
         fallstat[i]=-1;
+        ClearRowstat[i]=-1;
     }
-    fallImage=new GEImage();
-   
+    
     Loadimages();
     
 
@@ -37,48 +37,134 @@ void AnimationLayerPlayELS::New_fall(int index)
     fallTimer->setNotifyTarget(gamelayer);
     fallTimer->setDuration(0.25);//设置定时期时间
     fallTimer->setFuncOnTimerComplete(schedule_selector(GameLayerPlayELS::FallWithUpdate)); 
-    //fallTimer->setFuncOnTimerUpdate(schedule_selector(AnimationLayerPlayELS::rendFall));
     fallTimer->resume();
-    
-    fallImage->setImage(fallImg);
-    this->addChild(fallImage);
     fallstat[index]=0;
-    
-    
      
 }
 
 
-void AnimationLayerPlayELS::RenderDrop(int idx, int l1x1, int l1y1, int l1x2, int l1y2)
+void AnimationLayerPlayELS::RenderDrop(int idx)
 {
 	//not shades for other people.
 	if (idx!=0)
 		return;
 	
-	if (l1y2==0) 
+	
+	//当下扫动作发生后，绘制残影,小于0即非下扫动作
+    if(fallstat[idx]<0) return;
+    fallstat[idx]++;
+    int l1x1=100, l1y1=100, l1x2=0, l1y2=0;
+    if(mGS[idx].tdy&&idx==0)
+	{
+		int y=mGS[idx].tdy;
+		int z=mGS[idx].cur_z;
+        for (int i=0; i<4; i++) {
+			for (int j=0; j<4; j++) {
+				int type=mGS[idx].cur_block;
+				if(blkdat[type][z][i*4+j])
+				{
+					l1y2 = max(l1y2, y+i);//绘制时顺便求出高光条y2坐标
+                }
+			}
+		}
+	}
+    
+    for(int i=0;i<ZONG;i++)
+        for (int j=0; j<HENG; j++)
+            //计算渐变高光矩形条的坐标
+            if(mGS[idx].grid[i][2+j]<100 && mGS[idx].grid[i][2+j]!=0)
+            {
+                l1x1 = min(l1x1, j);
+                l1y1 = min(l1y1, i);
+                l1x2 = max(l1x2, j);
+            }
+
+    if (l1y2==0) 
 		return; //GAME OVER时，l1y2为0，此时不应绘制阴影
 	
-	//当下扫动作发生后，绘制残影
-	if (mGS[idx].grect_stage<=0 || mGS[idx].grect_stage<=180)
-		return;
     
 	int rw = (l1x2-l1x1+1)*blksize;
 	int rh = (l1y2-l1y1+1)*blksize;
 	int rx = mainx+l1x1*blksize-blksize/2+blkadjx+rw/2;
 	int ry = mainy+100+l1y1*blksize+rh/2; 
-	//float alpha=(mGS[idx].grect_stage-180)/6*0.05f;
-    printf("pos:---%d,%d\n",rx,ry);
+    float alpha=(9-fallstat[idx])/9*0.5f;
+    fallImage->setColor(1, 1, 1, alpha);
     fallImage->setPosition(rx, ry);
     fallImage->setScaleX(rw/84.0f);
     fallImage->setScaleY(rh/214.0f);
+    
 }
 
 
+void AnimationLayerPlayELS::New_ClearRow(int idx)
+{
+    ClearRowTimer=new GETimer();
+    ClearRowTimer->setNotifyTarget(gamelayer);
+    ClearRowTimer->setDuration(0.25);//设置定时期时间
+    //ClearRowTimer->setFuncOnTimerComplete(schedule_selector(GameLayerPlayELS::FallWithUpdate)); 
+    ClearRowTimer->resume();
+    ClearRowstat[idx]=0;   
+}
 
 
+void AnimationLayerPlayELS::Render_ClearRow(int idx)
+{
+    
+    for( int i=0;i<ZONG;i++)
+	{
+		bool fflag0=false;
+		
+		if(mGS[idx].clear_stage>(SET_CLEAR_STAGE-REND_CLEAR_STAGE))
+			for(int fm=0;fm<mGS[idx].full_rows_count%100;fm++)
+				if(i==mGS[idx].fullrows[fm])
+				{
+					fflag0=true;
+					break;
+				}
+    
+        if (!fflag0)
+        {
+            ClearRowImage1->setColor(1, 1, 1,0);
+            ClearRowImage2_1->setColor(1, 1, 1,0);
+            ClearRowImage2_2->setColor(1, 1, 1,0);
+            return;
+        }
+        printf("xiaohang \n");
+   // int i=0;//表示消除第几行
+    float boxs=1.0;
+    if(idx!=0) boxs=sidesc;
+    int boxx=mainx;
+    int boxy=mainy;
+    //mRender->EnableAddictiveDraw(true);
+    int cstage=SET_CLEAR_STAGE-mGS[idx].clear_stage;//0-20...
+    float tx,ty, xs;
+    ty=boxy+(blkadjy+i*blksize)*boxs;
+    tx=boxx+(blkadjx-20)*boxs;
+    xs=(20-cstage)*(1.0f/12.0f);
+    if (cstage<8) {
+        ClearRowImage1->setColor(1, 1, 1, 0.75f);
+        ClearRowImage1->setPosition(tx+HENG/2*blksize*boxs,  ty);
+        ClearRowImage1->setScaleX(10.5f*boxs);
+        ClearRowImage1->setScaleY(boxs);
+    }
+    else {
+        ClearRowImage2_1->setColor(1, 1, 1, 0.75f);
+        ClearRowImage2_1->setPosition(tx+xs*2.5f*blksize*boxs, ty);
+        ClearRowImage2_1->setScaleX(xs*boxs);
+        ClearRowImage2_1->setScaleY(boxs);
+        
+        
+        
+        ClearRowImage2_2->setPosition(tx+(HENG*blksize-xs*2.5f*blksize)*boxs, ty);
+        ClearRowImage2_2->setScaleX(xs*boxs);
+        ClearRowImage2_2->setScaleY(boxs);
+        //2的角度要设置成3.1415926f
+        
+        }
+    }
+    //mRender->EnableAddictiveDraw(false);
 
-
-
+}
 
    
 void AnimationLayerPlayELS::Cancel_fall(int index)
@@ -92,23 +178,10 @@ void AnimationLayerPlayELS::Cancel_fall(int index)
 void AnimationLayerPlayELS::Update(float dt)
 {
     int idx=0;
-    int l1x1=100, l1y1=100, l1x2=0, l1y2=1;
-    //rendFall(dt);
+   
     
-    
-    
-    if(fallstat[0]>=0)
-    for(int i=0;i<ZONG;i++)
-        for (int j=0; j<HENG; j++)
-    //计算渐变高光矩形条的坐标
-    if(mGS[idx].grid[i][2+j]<100 && mGS[idx].grid[i][2+j]!=0)
-    {
-            l1x1 = min(l1x1, j);
-        l1y1 = min(l1y1, i);
-        l1x2 = max(l1x2, j);
-   }
-    if(fallstat[0]>=0)
-RenderDrop(0, l1x1, l1y1, l1x2, l1y2);
+    RenderDrop(0);
+    Render_ClearRow(0);
     
 }
 
@@ -123,8 +196,31 @@ void AnimationLayerPlayELS::Loadimages()
     assetbox->LoadResource("Play1.xml");
     assetbox->LoadResource("Play2.xml");
     mSnow=assetbox->GetImage("newsnow.png");
+    
+    //下落条动画对象的添加，初始时不显示，故aphla设置为0
     fallImg=assetbox->GetImage("dropbar.png");
-  
+    fallImage=new GEImage();
+    fallImage->setImage(fallImg);
+    fallImage->setColor(1, 1, 1, 0);
+    this->addChild(fallImage);
+    
+    
+    
+    //消行动画对象的添加
+    ClearRowImg1= assetbox->GetImage("clear1.png");
+    ClearRowImg2= assetbox->GetImage("clear2.png");
+    ClearRowImage1=new GEImage();
+    ClearRowImage1->setImage(ClearRowImg1);
+    ClearRowImage1->setColor(1, 1, 1, 0);
+    this->addChild(ClearRowImage1);
+    ClearRowImage2_1=new GEImage();
+    ClearRowImage2_1->setImage(ClearRowImg2);
+    ClearRowImage2_1->setColor(1, 1, 1, 0);
+    this->addChild(ClearRowImage2_1);
+    ClearRowImage2_2=new GEImage();
+    ClearRowImage2_2->setImage(ClearRowImg2);
+    ClearRowImage2_2->setColor(1, 1, 1, 0);
+    this->addChild(ClearRowImage2_2);
 }
 
 

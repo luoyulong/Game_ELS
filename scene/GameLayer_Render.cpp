@@ -187,13 +187,6 @@ void GameLayerPlayELS::RenderMain(int idx, float boxx, float boxy, float boxs,CC
 			
 			bi=mGS[idx].grid[i][2+j]%100;
 			
-			//计算渐变高光矩形条的坐标
-			if(mGS[idx].grid[i][2+j]<100 && mGS[idx].grid[i][2+j]!=0)
-			{
-				l1x1 = min(l1x1, j);
-				l1y1 = min(l1y1, i);
-				l1x2 = max(l1x2, j);
-			}
 			//绘制小方块:正常，gameover灰块，道具
 			
             mRender->SetColor(1.0f, 1.0f, 1.0f, fflag0?
@@ -202,7 +195,8 @@ void GameLayerPlayELS::RenderMain(int idx, float boxx, float boxy, float boxs,CC
 			if(bi>0)
 			{
 				if(bi<50)
-				{//if(bi>11) printf("grid is %d \n",mGS[idx].grid[i][2+j]);
+				{
+                    if(bi>11) printf("grid is %d \n",mGS[idx].grid[i][2+j]);
 					if(!mGS[idx].game_over&&bi<11)
 						mRender->RenderImage(mBLK[bi-1], rex, rey+get_adjy_bygrect(idx), 0, boxs, boxs);
 					else
@@ -215,18 +209,8 @@ void GameLayerPlayELS::RenderMain(int idx, float boxx, float boxy, float boxs,CC
 			}
 		}
 		
-		if(fflag0)//消行效果
+		/*if(fflag0)//消行效果
 		{
-			/*float tx,ty;
-			 float step=(HENG*blksize*1.0f)/REND_CLEAR_STAGE;
-			 //mRender->EnableAddictiveDraw(true);
-			 mRender->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-			 ty=boxy+(blkadjy+i*blksize)*boxs;
-			 tx=boxx+blkadjx+HENG*blksize-((mGS[idx].clear_stage-(SET_CLEAR_STAGE-REND_CLEAR_STAGE))*step);
-			 float bangle=mGS[idx].clear_stage%10*(2*3.1415926f/10.0f);
-			 //printf("ARROW:%lf,%lf,%d\n", ty, tx, mGS[idx].clear_stage);
-			 mRender->RenderImage(mArrow, tx, ty, bangle, 1.2f*boxs, 1.2f*boxs);
-			 mRender->EnableAddictiveDraw(false);*/
 			mRender->EnableAddictiveDraw(true);
 			int cstage=SET_CLEAR_STAGE-mGS[idx].clear_stage;//0-20...
 			float tx,ty, xs;
@@ -243,11 +227,9 @@ void GameLayerPlayELS::RenderMain(int idx, float boxx, float boxy, float boxs,CC
 				mRender->RenderImage(mClear2, tx+(HENG*blksize-xs*2.5f*blksize)*boxs, ty, 3.1415926f, xs*boxs, boxs);
 			}
 			mRender->EnableAddictiveDraw(false);
-		}
+		}*/
 	}
 	
-	//绘制渐变高光矩形条
-    //RenderDrop(idx, l1x1, l1y1, l1x2, l1y2);
 	
 	//绘制粘住光晕及两侧烟尘...
 	if(idx==0)

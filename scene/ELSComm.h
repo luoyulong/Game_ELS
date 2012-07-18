@@ -60,5 +60,7 @@ extern  map<string, obstacles> obstacles_set;
 extern  GELayer * gamelayer;
 extern  GELayer * Annimationlayer;
 extern   GSTAT			mGS[4];
+extern int mainx,mainy;
+
 
 #endif

@@ -13,3 +13,4 @@ map<string, obstacles> obstacles_set;
 GELayer * gamelayer;
 GELayer * Annimationlayer;
 GSTAT			mGS[4];
+int mainx,mainy;

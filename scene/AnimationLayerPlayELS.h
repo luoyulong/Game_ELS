@@ -44,14 +44,13 @@ public:
     void RendCountDown();
     void Render(CCRenderBox* mRender);
     //void onEnter();
-    void New_clear_row(int index,SEL_MenuHandler CompeleteEvent);
-    void Cancel_clear_row();
+    void New_ClearRow(int index);
+    void Cancel_ClearRow();
+    void Render_ClearRow(int);
+    
     void New_fall(int index);
-    
-    
     void Cancel_fall(int index);//判断是否在直落，若是直落，则取消调用真正的取消直落函数
-    void rendFall(float);
-     void  RenderDrop(int,int,int,int,int);//方块的阴影
+    void  RenderDrop(int);//方块的阴影
     
     void Update(float dt);                                  //主循环更新
 
@@ -68,8 +67,16 @@ private:
     CCImage * fallImg;
     GEImage * fallImage;
     
+    GETimer * ClearRowTimer;
+    CCImage * ClearRowImg1;
+    CCImage * ClearRowImg2;
+    GEImage * ClearRowImage1;
+    GEImage * ClearRowImage2_1;
+    GEImage * ClearRowImage2_2;
+    
+    
     int mCountDownTimeLeft;//倒计时4秒
-    int mainx,mainy;
+    
     GESequenceFrames * m_pBackGround;
       
    
@@ -80,6 +87,7 @@ private:
     CCAssetBox * assetbox;
     GETimer* m_pTimer;
 public:float fallstat[4];
+    float ClearRowstat[4];
     
     
     
