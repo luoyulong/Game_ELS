@@ -283,7 +283,7 @@ void GameLayerPlayELS::touchesBegan(GESet *pTouches, GEEvent *pEvent)
 	//主区域内准备检测手势,清空键盘状态表
     if(isMainArea(touch_x, touch_y))
 	{
-        printf("主控区域  \n\n");
+        printf("正在主控区域  \n\n");
         memset(g_key_play, 0, sizeof(g_key_play));
 	}
 	//虚拟键盘区检测某个虚拟键被按下
@@ -390,7 +390,7 @@ void GameLayerPlayELS::touchesEnded(GESet *pTouches, GEEvent *pEvent)
 		
         if(dx<=15 && dy<=15)
         {
-			printf("ELS_PAUSE=%d\n", ELS_PAUSE);
+			printf("ELSKEY_PLAY_TURN and ELS_PAUSE=%d\n", ELS_PAUSE);
             g_key_play[ELSKEY_PLAY_TURN]=KEY_PRESSED;
         }
         return;
@@ -675,6 +675,7 @@ void GameLayerPlayELS::PlayTouchAction()
 				return;
 			}
 			//RecordAction(0, ts);
+           printf("%c ,",ret);
 			PlayActionBase(ts, 0);
 		}
 	}

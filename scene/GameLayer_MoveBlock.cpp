@@ -409,7 +409,7 @@ inline void GameLayerPlayELS::UpdateELS(int i)
 }
 void GameLayerPlayELS::FallWithUpdate(int i)
 {
-    printf("enter fallwithupdate and fallstat is %f\n",((AnimationLayerPlayELS *)Annimationlayer)->fallstat[0]);
+    
     ((AnimationLayerPlayELS *)Annimationlayer)->fallstat[0]=-1;
     do{
         if(mGS[0].game_over)
@@ -647,7 +647,7 @@ void GameLayerPlayELS::GenRandomBlockQueue(long seed)
 			if (tmptype==3 || tmptype==4) 
 				tmptype=2;
 		}
-		mBlockQueue[i]=tmptype;
+		mBlockQueue[i]=6;//tmptype;
 		printf("%d", mBlockQueue[i]);
 	}
 	printf("\n");
@@ -1296,6 +1296,7 @@ void GameLayerPlayELS::ProcessClearRow(int idx, bool ai, bool isLocalClear)
 			DumpELS(idx, "CLEARING");
 			//遇到上次正在播放消行动画的满行，直接消掉，再处理...
 			gp->clear_stage=(SET_CLEAR_STAGE-REND_CLEAR_STAGE);
+            
 			ClearFullRows(idx, ai);
 		}
 		gp->combo++;

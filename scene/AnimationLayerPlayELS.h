@@ -70,9 +70,10 @@ private:
     GETimer * ClearRowTimer;
     CCImage * ClearRowImg1;
     CCImage * ClearRowImg2;
-    GEImage * ClearRowImage1;
-    GEImage * ClearRowImage2_1;
-    GEImage * ClearRowImage2_2;
+    
+    GEImage * ClearRowImage1[4];
+    GEImage * ClearRowImage2_1[4];
+    GEImage * ClearRowImage2_2[4];
     
     
     int mCountDownTimeLeft;//倒计时4秒

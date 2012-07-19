@@ -36,7 +36,7 @@
 #define tablestra   0.65f
 #define tablestrx	60
 #define tablestry	170
-
+#define Annimation_layer ((AnimationLayerPlayELS *)(Annimationlayer))
 
 
 class obstacles

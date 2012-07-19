@@ -109,7 +109,14 @@ void AnimationLayerPlayELS::New_ClearRow(int idx)
 
 void AnimationLayerPlayELS::Render_ClearRow(int idx)
 {
-    
+    int k;
+    for(k=0;k<4;k++)
+    {   
+        ClearRowImage1[k]->setColor(1, 1, 1,0);
+        ClearRowImage2_1[k]->setColor(1, 1, 1,0);
+        ClearRowImage2_2[k]->setColor(1, 1, 1,0);
+    }
+    k=0;
     for( int i=0;i<ZONG;i++)
 	{
 		bool fflag0=false;
@@ -122,15 +129,11 @@ void AnimationLayerPlayELS::Render_ClearRow(int idx)
 					break;
 				}
     
-        if (!fflag0)
+     if (!fflag0)
         {
-            ClearRowImage1->setColor(1, 1, 1,0);
-            ClearRowImage2_1->setColor(1, 1, 1,0);
-            ClearRowImage2_2->setColor(1, 1, 1,0);
-            return;
+            continue;
         }
-        printf("xiaohang \n");
-   // int i=0;//表示消除第几行
+        k++;
     float boxs=1.0;
     if(idx!=0) boxs=sidesc;
     int boxx=mainx;
@@ -142,22 +145,22 @@ void AnimationLayerPlayELS::Render_ClearRow(int idx)
     tx=boxx+(blkadjx-20)*boxs;
     xs=(20-cstage)*(1.0f/12.0f);
     if (cstage<8) {
-        ClearRowImage1->setColor(1, 1, 1, 0.75f);
-        ClearRowImage1->setPosition(tx+HENG/2*blksize*boxs,  ty);
-        ClearRowImage1->setScaleX(10.5f*boxs);
-        ClearRowImage1->setScaleY(boxs);
+        ClearRowImage1[k]->setColor(1, 1, 1, 0.75f);
+        ClearRowImage1[k]->setPosition(tx+HENG/2*blksize*boxs,  ty);
+        ClearRowImage1[k]->setScaleX(10.5f*boxs);
+        ClearRowImage1[k]->setScaleY(boxs);
     }
     else {
-        ClearRowImage2_1->setColor(1, 1, 1, 0.75f);
-        ClearRowImage2_1->setPosition(tx+xs*2.5f*blksize*boxs, ty);
-        ClearRowImage2_1->setScaleX(xs*boxs);
-        ClearRowImage2_1->setScaleY(boxs);
+        ClearRowImage2_1[k]->setColor(1, 1, 1, 0.75f);
+        ClearRowImage2_1[k]->setPosition(tx+xs*2.5f*blksize*boxs, ty);
+        ClearRowImage2_1[k]->setScaleX(xs*boxs);
+        ClearRowImage2_1[k]->setScaleY(boxs);
         
         
-        
-        ClearRowImage2_2->setPosition(tx+(HENG*blksize-xs*2.5f*blksize)*boxs, ty);
-        ClearRowImage2_2->setScaleX(xs*boxs);
-        ClearRowImage2_2->setScaleY(boxs);
+        ClearRowImage2_2[k]->setColor(1, 1, 1, 0.75f);
+        ClearRowImage2_2[k]->setPosition(tx+(HENG*blksize-xs*2.5f*blksize)*boxs, ty);
+        ClearRowImage2_2[k]->setScaleX(xs*boxs);
+        ClearRowImage2_2[k]->setScaleY(boxs);
         //2的角度要设置成3.1415926f
         
         }
@@ -209,18 +212,22 @@ void AnimationLayerPlayELS::Loadimages()
     //消行动画对象的添加
     ClearRowImg1= assetbox->GetImage("clear1.png");
     ClearRowImg2= assetbox->GetImage("clear2.png");
-    ClearRowImage1=new GEImage();
-    ClearRowImage1->setImage(ClearRowImg1);
-    ClearRowImage1->setColor(1, 1, 1, 0);
-    this->addChild(ClearRowImage1);
-    ClearRowImage2_1=new GEImage();
-    ClearRowImage2_1->setImage(ClearRowImg2);
-    ClearRowImage2_1->setColor(1, 1, 1, 0);
-    this->addChild(ClearRowImage2_1);
-    ClearRowImage2_2=new GEImage();
-    ClearRowImage2_2->setImage(ClearRowImg2);
-    ClearRowImage2_2->setColor(1, 1, 1, 0);
-    this->addChild(ClearRowImage2_2);
+    
+    for(int i=0;i<4;i++)
+    {
+    ClearRowImage1[i]=new GEImage();
+    ClearRowImage1[i]->setImage(ClearRowImg1);
+    ClearRowImage1[i]->setColor(1, 1, 1, 0);
+    this->addChild(ClearRowImage1[i]);
+    ClearRowImage2_1[i]=new GEImage();
+    ClearRowImage2_1[i]->setImage(ClearRowImg2);
+    ClearRowImage2_1[i]->setColor(1, 1, 1, 0);
+    this->addChild(ClearRowImage2_1[i]);
+    ClearRowImage2_2[i]=new GEImage();
+    ClearRowImage2_2[i]->setImage(ClearRowImg2);
+    ClearRowImage2_2[i]->setColor(1, 1, 1, 0);
+    this->addChild(ClearRowImage2_2[i]);
+    }
 }
 
 
