@@ -93,12 +93,11 @@ void GameLayerPlayELS::UpdateLevel(int oldscore, GSTAT *gp, int idx)
 //消除满行,clear_stage是为了实现消行动态闪烁效果
 int GameLayerPlayELS::ClearFullRows(int idx, bool ai)
 {   
+    return 0;
 	int i, j, n, ret=0;
 	GSTAT *gp;
-	
 	gp = &mGS[idx];
- 
-	if(gp->clear_stage==(SET_CLEAR_STAGE-REND_CLEAR_STAGE))
+	if(false)
 	{
 		ret=1;
 		bool isItemFullRows=false;
@@ -164,6 +163,14 @@ int GameLayerPlayELS::ClearFullRows(int idx, bool ai)
 		}
 		gp->full_rows_count=0;
 	} 
+    
+    
+    
+    
+    
+    
+    
+    
 	//解锁下一个试炼阵法
 	if (mElsMode==ELS_MODE_SINGLE && mBJIdx!=0) {
 		//printf("unlock:bjidx=%d topline=%d unbmp=%d\n", mBJIdx, gp->top_line, g_unlock_bmp);
@@ -181,7 +188,83 @@ int GameLayerPlayELS::ClearFullRows(int idx, bool ai)
 	return ret;
 }
 
+void GameLayerPlayELS::ClearRowWithUpdate_0(int i)
+{
+    printf("begin emite lines");
+    ClearRowWithUpdate(0, false);
+}
 
+
+void GameLayerPlayELS::ClearRowWithUpdate(int idx,bool ai)
+{
+    GSTAT *gp;
+	int i,j,n;
+	gp = &mGS[idx];
+    bool isItemFullRows=false;
+    if (gp->full_rows_count>100) {//道具造成的消行，不加分，不加攻击
+        isItemFullRows=true;
+    }
+    if(gp->full_rows_count%100)
+    {   
+        //检测4行连消的情况
+        if (idx==0)
+            TestAchievement(mGS[0].full_rows_count%100);
+        //清除满行
+        DumpELS(idx, "CLEAR");
+        for(n=0;n<gp->full_rows_count%100;n++)
+        {
+            for(i=gp->fullrows[n];i>=0;i--)
+                for(j=0;j<HENG;j++) 
+                {
+                   int tmpitemtype=gp->grid[i][j+2];
+                    if((tmpitemtype>150) && i==gp->fullrows[n])
+                    {
+                        tmpitemtype=tmpitemtype%150;
+                        gp->score+=5;
+                        UpdateLevel(gp->score-5, gp, idx);
+                        if (idx == 0) {
+                            //增加新ITEMMOVE到vector
+                            ITEMMOVE new_itemmove;
+                            new_itemmove.itemtype = tmpitemtype;
+                            new_itemmove.startx   =	mainx+10+(j+1)*blksize;//for retina
+                            new_itemmove.starty   = mainy+100+i*blksize;//for retina
+                            new_itemmove.endx	  = (GetButtonRecItem(tmpitemtype-1, 0)+GetButtonRecItem(tmpitemtype-1, 2))-5;
+                            new_itemmove.endy	  = (GetButtonRecItem(tmpitemtype-1, 1)+GetButtonRecItem(tmpitemtype-1, 3));
+                            new_itemmove.item_move_stage = 60;
+                            mItemFly.push_back(new_itemmove);
+                        }
+                    }
+                    if(i)
+                    {
+                        if(gp->grid[i-1][j+2]>100 || gp->grid[i-1][j+2]==0)
+                        {
+                            if(!(gp->grid[i][j+2]<10 && gp->grid[i][j+2]>0))
+                                gp->grid[i][j+2]=gp->grid[i-1][j+2];
+                        }
+                        else
+                            if(!(gp->grid[i][j+2]<10 && gp->grid[i][j+2]>0))
+                                gp->grid[i][j+2]=0;
+                    }
+                    else
+                    {
+                        if(!(gp->grid[i][j+2]<10 && gp->grid[i][j+2]>0))
+                            gp->grid[i][j+2]=0;
+                    }
+                }
+            gp->fullrows[n]=0;
+        }
+        UpdateColHoleTop(idx, 2, 11);
+        if (!ai && !isItemFullRows) {
+            gp->attack[0]=gp->full_rows_count-1;
+            if(gp->combo>=3) gp->attack[0]++;
+            gp->attack[1]=gp->block_index;
+        }
+        DumpELS(idx, "AFTER CLEAR");
+    }
+    Annimation_layer->ClearRowstat[idx]=0;
+    gp->full_rows_count=0;
+    TestDDown(idx);
+}
 
 
 
@@ -382,7 +465,7 @@ inline void GameLayerPlayELS::UpdateELS(int i)
 	}*/
 	
 	if(mGS[i].grect_stage>0) mGS[i].grect_stage-=4; //更新下落残影stage
-	if (mGS[i].clear_stage>0) mGS[i].clear_stage--; //更新消行stage
+	//if (mGS[i].clear_stage>0) mGS[i].clear_stage--; //更新消行stage
     
 	if (mGS[i].cling_stage>0) mGS[i].cling_stage--;
 	if (mGS[i].levelup_stage) mGS[i].levelup_stage--;
@@ -852,7 +935,7 @@ void GameLayerPlayELS::PlayActionBase(char *act, int index)
 	u8 tmode=(mElsMode==ELS_MODE_REPLAY)?mElsRepMode:mElsMode;
 	
     
-   ((AnimationLayerPlayELS *)Annimationlayer)->Cancel_fall(index);
+   Annimation_layer->Cancel_fall(index);
 
 
 	switch (aiact)
@@ -1261,11 +1344,11 @@ void GameLayerPlayELS::Attack(int idx, int line, int spaceseed)
 	//TODO:攻击影响col_hole
 }
 */
-//用于预先绘制下落到底部的虚影，用于更好的瞄准
+//用于预先绘制下落到底部的虚影，用于更好的瞄准 
 int GameLayerPlayELS::TestDDown(int idx)
 {
 	s8 x, y;
-	GSTAT tmp;
+	GSTAT tmp;//这里用了一个tmp的mGS存放真实的数据
 	
 	tmp=mGS[idx];
 	while(MoveBlk(DDOWN, idx, true)!=REACH_BOTTOM);
@@ -1274,7 +1357,7 @@ int GameLayerPlayELS::TestDDown(int idx)
 	mGS[idx]=tmp;
 	mGS[idx].tdx=x;
 	mGS[idx].tdy=y;
-	
+    
 	return 0;
 }
 
@@ -1290,18 +1373,19 @@ void GameLayerPlayELS::ProcessClearRow(int idx, bool ai, bool isLocalClear)
 	{	
 		
 		
-		if (gp->clear_stage>=(SET_CLEAR_STAGE-REND_CLEAR_STAGE) && !ai)
+		if (Annimation_layer->ClearRowstat[idx]>0 && !ai)
 		{
-			printf("CLEARING LINE DETECTED,STAGE=%d\n", gp->clear_stage);
+			
 			DumpELS(idx, "CLEARING");
-			//遇到上次正在播放消行动画的满行，直接消掉，再处理...
-			gp->clear_stage=(SET_CLEAR_STAGE-REND_CLEAR_STAGE);
-            
-			ClearFullRows(idx, ai);
+			//遇到上次正在播放消行动画的满行，提前结束它
+          Annimation_layer->Cancel_ClearRow(idx);
+            ClearFullRows(idx, ai);
 		}
 		gp->combo++;
 		TestAchievement();
-		gp->clear_stage=SET_CLEAR_STAGE;
+        if(!ai)
+        Annimation_layer->New_ClearRow(idx);
+		//gp->clear_stage=SET_CLEAR_STAGE;
 		if(!ai)
 		{
 			gp->score+=ls[gp->full_rows_count-1];
@@ -1623,6 +1707,7 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
 								gp->fullrows[i++]=cy+m;
 						}
 						gp->full_rows_count = i;
+                        
 					ProcessClearRow(idx, ai, true);
 					}
 					

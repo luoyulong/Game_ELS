@@ -82,6 +82,11 @@ private:
     void FallWithUpdate_2();//
     void FallWithUpdate_3();//
     
+    
+    void ClearRowWithUpdate(int,bool);
+    void ClearRowWithUpdate_0(int i);
+    
+    
     //==================TestAchievement================
     void  TestAchievement(int clear=0);
     void  AddNewAchieve(int achieve, float percent);

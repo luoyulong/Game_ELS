@@ -126,7 +126,7 @@ void GameLayerPlayELS::RenderNextSave(CCRenderBox* mRender)
 
 void GameLayerPlayELS::RenderMain(int idx, float boxx, float boxy, float boxs,CCRenderBox* mRender)
 {
-	int l1x1=100, l1y1=100, l1x2=0, l1y2=0;
+	int l1x1=100, l1y1=100, l1x2=0;
 	int i,j,bi;
 	
 	//网格...
@@ -147,7 +147,6 @@ void GameLayerPlayELS::RenderMain(int idx, float boxx, float boxy, float boxs,CC
 	//画预估方块直落后的影子
   	if(mGS[idx].tdy && idx==0)// && g_options[4])
 	{
-        //printf("rend shadown\n");
 		int x=mGS[idx].tdx;
 		int y=mGS[idx].tdy;
 		int z=mGS[idx].cur_z;
@@ -157,12 +156,9 @@ void GameLayerPlayELS::RenderMain(int idx, float boxx, float boxy, float boxs,CC
 				int type=mGS[idx].cur_block;
 				if(blkdat[type][z][i*4+j])
 				{
-                   // if(blkdat[type][z][i*4+j]-1>10)
-                    
                     
                     mRender->RenderImage(mBLK[blkdat[type][z][i*4+j]-1], 
 										 boxx+(blkadjx+(x+j-2)*blksize)*boxs, boxy+(blkadjy+(y+i)*blksize)*boxs, 0, boxs, boxs);
-					l1y2 = max(l1y2, y+i);//绘制时顺便求出高光条y2坐标
 				}
 			}
 		}
@@ -173,7 +169,7 @@ void GameLayerPlayELS::RenderMain(int idx, float boxx, float boxy, float boxs,CC
 	{
 		bool fflag0=false;
 		
-		if(mGS[idx].clear_stage>(SET_CLEAR_STAGE-REND_CLEAR_STAGE))
+		if(Annimation_layer->ClearRowstat[idx]>0)
 			for(int fm=0;fm<mGS[idx].full_rows_count%100;fm++)
 				if(i==mGS[idx].fullrows[fm])
 				{
@@ -190,46 +186,30 @@ void GameLayerPlayELS::RenderMain(int idx, float boxx, float boxy, float boxs,CC
 			//绘制小方块:正常，gameover灰块，道具
 			
             mRender->SetColor(1.0f, 1.0f, 1.0f, fflag0?
-							  ((mGS[idx].clear_stage-(SET_CLEAR_STAGE-REND_CLEAR_STAGE))/(REND_CLEAR_STAGE*1.0f))://满行淡出效果
+							  ((Annimation_layer->ClearRowstat[idx])/(Annimation_layer->ClearRow_displaylength*0.8f))://满行淡出效果
 							  1.0f);
 			if(bi>0)
 			{
 				if(bi<50)
 				{
-                    if(bi>11) printf("grid is %d \n",mGS[idx].grid[i][2+j]);
-					if(!mGS[idx].game_over&&bi<11)
+                    assert(bi<12);
+					if(!mGS[idx].game_over)
 						mRender->RenderImage(mBLK[bi-1], rex, rey+get_adjy_bygrect(idx), 0, boxs, boxs);
 					else
 						mRender->RenderImage(mBLK[10], rex, rey+get_adjy_bygrect(idx), 0, boxs, boxs);
 				}
 				else
 				{
-					//mRender->RenderImage(mItemBLK[bi-50], rex, rey+get_adjy_bygrect(idx), 0, boxs, boxs);
+					mRender->RenderImage(mItemBLK[bi-50], rex, rey+get_adjy_bygrect(idx), 0, boxs, boxs);
 				}
 			}
 		}
 		
-		/*if(fflag0)//消行效果
-		{
-			mRender->EnableAddictiveDraw(true);
-			int cstage=SET_CLEAR_STAGE-mGS[idx].clear_stage;//0-20...
-			float tx,ty, xs;
-			ty=boxy+(blkadjy+i*blksize)*boxs;
-			tx=boxx+(blkadjx-20)*boxs;
-			xs=(20-cstage)*(1.0f/12.0f);
-			if (cstage<8) {
-				mRender->SetColor(1, 1, 1, 0.75f);
-				mRender->RenderImage(mClear1, tx+HENG/2*blksize*boxs, ty, 0, 10.5f*boxs, boxs);
 			}
-			else {
-				mRender->SetColor(1, 1, 1, 0.75f);
-				mRender->RenderImage(mClear2, tx+xs*2.5f*blksize*boxs, ty, 0, xs*boxs, boxs);
-				mRender->RenderImage(mClear2, tx+(HENG*blksize-xs*2.5f*blksize)*boxs, ty, 3.1415926f, xs*boxs, boxs);
-			}
-			mRender->EnableAddictiveDraw(false);
-		}*/
-	}
 	
+    
+    
+    
 	
 	//绘制粘住光晕及两侧烟尘...
 	if(idx==0)
@@ -390,13 +370,15 @@ inline float GameLayerPlayELS::get_adjy_bygrect(int idx)
 	if(mGS[idx].game_over)
 		return 0;
 	
-	int grect = mGS[idx].grect_stage;
+   // printf("clearrowstat is  %f",Annimation_layer->ClearRowstat[idx]);
+	//int grect = mGS[idx].grect_stage;
 	float adjy = 0;
-	int grs    = grect-200;
+	int grs    = Annimation_layer->fallstat[idx];//grect-200;
 	int range  = (240-180)/2;
 	int rdm    = 16;
 	if (grs>0) 
 	{
+        printf("---grs is %d\n",grs);
 		if (grs<=range) 
 			adjy=blksize*(grs*1.0f/range)-rdm/2+rand()%rdm;
 		else 

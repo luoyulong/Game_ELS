@@ -45,7 +45,7 @@ public:
     void Render(CCRenderBox* mRender);
     //void onEnter();
     void New_ClearRow(int index);
-    void Cancel_ClearRow();
+    void Cancel_ClearRow(int);
     void Render_ClearRow(int);
     
     void New_fall(int index);
@@ -89,6 +89,7 @@ private:
     GETimer* m_pTimer;
 public:float fallstat[4];
     float ClearRowstat[4];
+    float ClearRow_displaylength;//消行动画的针数
     
     
     

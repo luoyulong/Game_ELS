@@ -16,10 +16,12 @@ AnimationLayerPlayELS::AnimationLayerPlayELS()
     GEScene* pScene = GEDirector::GetInstance()->getScene("GameScenePlayELS");
     pScene->addChild(this,30);
     init=false;
+    ClearRow_displaylength=30;
     for (int i=0; i<4; i++) {
         fallstat[i]=-1;
-        ClearRowstat[i]=-1;
+        ClearRowstat[i]=0;
     }
+    
     
     Loadimages();
     
@@ -41,7 +43,6 @@ void AnimationLayerPlayELS::New_fall(int index)
     fallstat[index]=0;
      
 }
-
 
 void AnimationLayerPlayELS::RenderDrop(int idx)
 {
@@ -99,17 +100,19 @@ void AnimationLayerPlayELS::RenderDrop(int idx)
 void AnimationLayerPlayELS::New_ClearRow(int idx)
 {
     ClearRowTimer=new GETimer();
-    ClearRowTimer->setNotifyTarget(gamelayer);
-    ClearRowTimer->setDuration(0.25);//设置定时期时间
-    //ClearRowTimer->setFuncOnTimerComplete(schedule_selector(GameLayerPlayELS::FallWithUpdate)); 
+    ClearRowTimer->setNotifyTarget(gamelayer);//
+    ClearRowTimer->setDuration(ClearRow_displaylength/60);//设置定时期时间
+    ClearRowTimer->setFuncOnTimerComplete(schedule_selector(GameLayerPlayELS::ClearRowWithUpdate_0)); 
     ClearRowTimer->resume();
-    ClearRowstat[idx]=0;   
+    ClearRowstat[idx]=ClearRow_displaylength;   
 }
 
 
 void AnimationLayerPlayELS::Render_ClearRow(int idx)
 {
     int k;
+    int cstage=0;
+    //reset the clear image invisible
     for(k=0;k<4;k++)
     {   
         ClearRowImage1[k]->setColor(1, 1, 1,0);
@@ -117,17 +120,20 @@ void AnimationLayerPlayELS::Render_ClearRow(int idx)
         ClearRowImage2_2[k]->setColor(1, 1, 1,0);
     }
     k=0;
-    for( int i=0;i<ZONG;i++)
+    for(int i=0;i<ZONG;i++)
 	{
 		bool fflag0=false;
 		
-		if(mGS[idx].clear_stage>(SET_CLEAR_STAGE-REND_CLEAR_STAGE))
-			for(int fm=0;fm<mGS[idx].full_rows_count%100;fm++)
+		if(ClearRowstat[idx]>0)
+        {  
+            printf("idx is %d full row and clearrowstat is %f\n",idx,ClearRowstat[0]);
+            for(int fm=0;fm<mGS[idx].full_rows_count%100;fm++)
 				if(i==mGS[idx].fullrows[fm])
 				{
 					fflag0=true;
 					break;
 				}
+        }
     
      if (!fflag0)
         {
@@ -139,7 +145,16 @@ void AnimationLayerPlayELS::Render_ClearRow(int idx)
     int boxx=mainx;
     int boxy=mainy;
     //mRender->EnableAddictiveDraw(true);
-    int cstage=SET_CLEAR_STAGE-mGS[idx].clear_stage;//0-20...
+        
+    
+        if(k==1)
+        {
+            cstage=ClearRow_displaylength-ClearRowstat[idx]--;//0-ClearRow_displaylength..
+            printf("cstage is %d \n",cstage);
+        }
+        else {
+            printf("k is %d\n",k);
+        }
     float tx,ty, xs;
     ty=boxy+(blkadjy+i*blksize)*boxs;
     tx=boxx+(blkadjx-20)*boxs;
@@ -170,6 +185,12 @@ void AnimationLayerPlayELS::Render_ClearRow(int idx)
 }
 
    
+void AnimationLayerPlayELS::Cancel_ClearRow(int idx)
+{
+    if(ClearRowstat[0]<=0) return;
+    ClearRowTimer->cancelTimer();
+    ClearRowstat[idx]=0;
+}
 void AnimationLayerPlayELS::Cancel_fall(int index)
 {
     if(fallstat[index]<0) return;
