@@ -195,8 +195,15 @@ void GameLayerPlayELS::ClearRowWithUpdate_0(int i)
 }
 
 
-void GameLayerPlayELS::ClearRowWithUpdate(int idx,bool ai)
+void GameLayerPlayELS::ClearRowWithUpdate(int argc,char * argv)
 {
+    int idx;
+    bool ai;
+    assert(argc==2);
+    idx=argv[0];
+    ai=argv[1];
+    delete argv;
+    argv=NULL;
     GSTAT *gp;
 	int i,j,n;
 	gp = &mGS[idx];
@@ -264,6 +271,7 @@ void GameLayerPlayELS::ClearRowWithUpdate(int idx,bool ai)
     Annimation_layer->ClearRowstat[idx]=0;
     gp->full_rows_count=0;
     TestDDown(idx);
+    
 }
 
 
@@ -464,7 +472,7 @@ inline void GameLayerPlayELS::UpdateELS(int i)
 		TestDDown(i);
 	}*/
 	
-	if(mGS[i].grect_stage>0) mGS[i].grect_stage-=4; //更新下落残影stage
+	//if(mGS[i].grect_stage>0) mGS[i].grect_stage-=4; //更新下落残影stage
 	//if (mGS[i].clear_stage>0) mGS[i].clear_stage--; //更新消行stage
     
 	if (mGS[i].cling_stage>0) mGS[i].cling_stage--;
@@ -479,7 +487,7 @@ inline void GameLayerPlayELS::UpdateELS(int i)
 	}
     
 	ClearFullRows(i, false); //消除填满的行
-	if(mGS[i].grect_stage==180) //绘制完直落阴影(grect_stage从240减到180),执行真正的直落操作
+	/*if(mGS[i].grect_stage==180) //绘制完直落阴影(grect_stage从240减到180),执行真正的直落操作
 	{
 		while(MoveBlk(DDOWN, i, false)!=REACH_BOTTOM)
 		{
@@ -488,7 +496,7 @@ inline void GameLayerPlayELS::UpdateELS(int i)
 		}
 		NextBlk(i, false);
 		TestDDown(i);
-	}
+	}*/
 }
 void GameLayerPlayELS::FallWithUpdate(int i)
 {

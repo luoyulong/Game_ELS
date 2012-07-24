@@ -669,11 +669,11 @@ void GameLayerPlayELS::PlayTouchAction()
 		{
 			char ts[4];
 			ts[0]=ret, ts[1]=0;
-			if (mGS[0].grect_stage>180) {
+			/*if (mGS[0].grect_stage>180) {
 				//当检测到直落指令后，在grect_stage没减小到180的时候，不允许其他指令
 				printf("GRECT deny action!!!");
 				return;
-			}
+			}*/
 			//RecordAction(0, ts);
            printf("%c ,",ret);
 			PlayActionBase(ts, 0);

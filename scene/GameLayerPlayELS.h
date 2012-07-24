@@ -83,7 +83,7 @@ private:
     void FallWithUpdate_3();//
     
     
-    void ClearRowWithUpdate(int,bool);
+    void ClearRowWithUpdate(int,char *);
     void ClearRowWithUpdate_0(int i);
     
     

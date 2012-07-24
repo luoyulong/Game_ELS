@@ -102,7 +102,11 @@ void AnimationLayerPlayELS::New_ClearRow(int idx)
     ClearRowTimer=new GETimer();
     ClearRowTimer->setNotifyTarget(gamelayer);//
     ClearRowTimer->setDuration(ClearRow_displaylength/60);//设置定时期时间
-    ClearRowTimer->setFuncOnTimerComplete(schedule_selector(GameLayerPlayELS::ClearRowWithUpdate_0)); 
+    ClearRowTimer->setFuncOnTimerComplete(general_selector(GameLayerPlayELS::ClearRowWithUpdate)); 
+    char * argv= (char *)malloc(2*sizeof(char));
+    argv[0]=idx;
+    argv[1]=false;
+    ClearRowTimer->setParameterOnTimerComplete(2,argv);
     ClearRowTimer->resume();
     ClearRowstat[idx]=ClearRow_displaylength;   
 }

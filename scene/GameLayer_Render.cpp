@@ -370,16 +370,13 @@ inline float GameLayerPlayELS::get_adjy_bygrect(int idx)
 	if(mGS[idx].game_over)
 		return 0;
 	
-   // printf("clearrowstat is  %f",Annimation_layer->ClearRowstat[idx]);
-	//int grect = mGS[idx].grect_stage;
 	float adjy = 0;
 	int grs    = Annimation_layer->fallstat[idx];//grect-200;
 	int range  = (240-180)/2;
 	int rdm    = 16;
 	if (grs>0) 
 	{
-        printf("---grs is %d\n",grs);
-		if (grs<=range) 
+       		if (grs<=range) 
 			adjy=blksize*(grs*1.0f/range)-rdm/2+rand()%rdm;
 		else 
 			adjy=blksize*(1.0f-(grs-range)*1.0f/range)-rdm/2+rand()%rdm;
