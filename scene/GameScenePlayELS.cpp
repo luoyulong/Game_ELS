@@ -54,10 +54,17 @@ GameScenePlayELS::GameScenePlayELS()
     new GameLayerPlayELS();
     new AnimationLayerPlayELS();
     new PopLayerPlayELS();
+    new ItemLayerPlayELS();
     
     // new menu
     GEMenu* pMenu = new GEMenu();
     pScene->addChild(pMenu);
+    
+    
+    
+    //init common variable
+   // mLFont=new GEText();
+    //mLFont->setFontSize(20.0f);
     
     
 }

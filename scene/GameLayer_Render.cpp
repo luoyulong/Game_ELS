@@ -10,20 +10,27 @@
 #include "GameLayerPlayELS.h"
 
 
-
-
-
-
-
-
-
-
-
-
-
-void GameLayerPlayELS::Render(CCRenderBox* mRender)
+void GameLayerPlayELS::drawnum(int num, float x, float y, float angle, float xs, float ys)
 {
-    this->mRender=mRender;
+	char tmp[128];
+	snprintf(tmp, 128, "%d", num);
+	int lsc=strlen(tmp);
+	int ssc=x+9-lsc*9;
+	for (int i=0; i<lsc; i++) 
+		mRender->RenderImage(mInfoNum[tmp[i]-'0'], ssc+i*18*xs, y, angle, xs, ys);
+}
+
+
+
+
+
+
+
+
+
+void GameLayerPlayELS::Render(CCRenderBox* Render)
+{
+    mRender=Render;
 	//if(RenderNetInit(dt)) return;			//绘制网络模式下各种等待状态的界面,如果其返回值为真，表示已经通过这个函数绘制了界面，则不需要后面的绘制工作了...
 /*
 	
@@ -33,7 +40,7 @@ void GameLayerPlayELS::Render(CCRenderBox* mRender)
 	RenderScore();							//绘制分数，行数，级别
 	
 	RenderLevelUp(0);
-	RenderItem();							//绘制道具
+	
 	RenderAttack();							//绘制攻击
 	RenderCombo();							//绘制连击
 	RenderPause();							//绘制暂停菜单
@@ -49,12 +56,27 @@ void GameLayerPlayELS::Render(CCRenderBox* mRender)
 	if (mElsMode==ELS_MODE_NET && g_net_achieve!=-1)
 		TestAchievement();
 */
+   // RenderItem();							//绘制道具
 	RenderGameFrame();	
     RenderNextSave(mRender);						//绘制next和save块...
 	//mRender->SetColor(1, 1, 1, 1);
 	//mFont->DrawString(fuck, 30, 300);
    // mParticleSystem2->Render(0, 0);
+    //void GameStatePlay::RenderItem(int idx, float mx, float my, float scale)
+    //更改函数为RenderItem(int idx);
+    //只Render自己的道具，其他人的道具只是记录但不显示
+
+    
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -126,7 +148,7 @@ void GameLayerPlayELS::RenderNextSave(CCRenderBox* mRender)
 
 void GameLayerPlayELS::RenderMain(int idx, float boxx, float boxy, float boxs,CCRenderBox* mRender)
 {
-	int l1x1=100, l1y1=100, l1x2=0;
+//	int l1x1=100, l1y1=100, l1x2=0;
 	int i,j,bi;
 	
 	//网格...

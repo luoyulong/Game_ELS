@@ -205,8 +205,8 @@ void AnimationLayerPlayELS::Cancel_fall(int index)
 
 void AnimationLayerPlayELS::Update(float dt)
 {
-    int idx=0;
-   
+   // int idx=0;
+    
     
     RenderDrop(0);
     Render_ClearRow(0);

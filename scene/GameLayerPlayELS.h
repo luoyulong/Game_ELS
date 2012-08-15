@@ -129,7 +129,8 @@ private:
     void  RenderGameFrame();
     void  RenderHighLight();
     void  RenderReplay();
-    
+    void RenderItem();
+
     void  RenderNet();
     void  RenderScoreBoard(float dt);								//绘制得分榜
     void  RenderHelp();										//绘制帮助
@@ -142,14 +143,18 @@ private:
     void  RenderWinLose(float dt);
     void  RenderNextSave(CCRenderBox* mRender);
     void  RenderScore();
+    void  drawnum(int num, float x, float y, float angle=0, float xs=1.0f, float ys=1.0f);
     
     
      //==================background================
     float get_adjy_bygrect(int idx);
     void  rns(s8, float, float, float, int, int, float,CCRenderBox* );
 
-    
-private:
+public:  
+    vector<ITEMMOVE> mItemFly;
+    int				mItemNum[10];//记录每局【本地】游戏中得到的道具，对战中的数据取自ELSSaveData中的g_item_num[10].
+
+public:
      GEImage   *m_pPlayBoard;
     CCImage	*mBgT, *mBgTK, *mBgSTK, *mBgNS[2], *mItemBLK[11], *mBLK[11], *mNO[10], //mItemBLK[0]存放星星，1-10存放10个道具
     *mMask, *mGrid, *mGua2, *mBottom, *mItemBox, *mBigNO[4], *mItemSelected, 
@@ -177,15 +182,13 @@ private:
     
     
     
-    u8				mElsMode, mElsRepMode, mSafeTop, mTurnMode, mTheme, mRepTheme, mNanDu;//stat data
+   
     int			mRepSaved, mPauseStage, mNetInitStage;//mPauseStage用于显示对话框时的效果,mNetInitStage用于显示刚进入房间
     char			mActQueue[32];//AI动作序列:T-旋转 W-直落 D-下落 L-左移 R-右移 N-下一块 S-保存当前块	
-    vector<ITEMMOVE> mItemFly;
-    int				mItemChoose;//选中了哪个道具，0未选中，1-10对应10个道具，使用道具时用于识别手势。
+      int				mItemChoose;//选中了哪个道具，0未选中，1-10对应10个道具，使用道具时用于识别手势。
     int				mItemTarget;//道具的对象，0-3表示4个玩家，4表示没有使用对象，道具处于待发状态。
     //mItemChoose和mItemTarget组合来完成道具的选择和定位目标功能。
     
-    int				mItemNum[10];//记录每局【本地】游戏中得到的道具，对战中的数据取自ELSSaveData中的g_item_num[10].
     int				mItemLimit[10];//每局游戏中每种道具的使用限制。使用时-1，每局开始时重置。
     
     int				mShowItemLimitNoticeStageLeft;//游戏中道具限制的提示，显示的剩余帧数。
@@ -199,7 +202,7 @@ private:
     //检测Achievement用
     int				m4LineCleared;
     //是否此局游戏的第一个道具
-    int				isFirstItem;
+
     
     //当前局是否已显示过hold的帮助
     int				hasShowHoldHelp;
@@ -221,7 +224,7 @@ private:
    
     int mCountDownTimeLeft;//用于游戏开始前的倒计时
     
-    CCRenderBox* mRender;
+    
     
     
     

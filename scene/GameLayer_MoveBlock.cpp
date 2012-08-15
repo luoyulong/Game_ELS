@@ -13,7 +13,7 @@
 #define blksize		36.0f
 
 //出现宝石的几率,越大越不容易出现
-static int GOLDENLUCK  =  50;
+static int GOLDENLUCK  =  2;//最开始是50
 static int ItemLimit[10] = {5,5,5,5,5,5,5,5,5,5};
 inline bool cmp_score(const HSCORE *a, const HSCORE *b)
 {
@@ -148,7 +148,7 @@ int GameLayerPlayELS::ClearFullRows(int idx, bool ai)
 						else
 						{
 							if(!(gp->grid[i][j+2]<10 && gp->grid[i][j+2]>0))
-								gp->grid[i][j+2]=0;
+				 				gp->grid[i][j+2]=0;
 						}
 					}
 				gp->fullrows[n]=0;
@@ -213,6 +213,7 @@ void GameLayerPlayELS::ClearRowWithUpdate(int argc,char * argv)
     }
     if(gp->full_rows_count%100)
     {   
+        
         //检测4行连消的情况
         if (idx==0)
             TestAchievement(mGS[0].full_rows_count%100);
@@ -1609,6 +1610,7 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
 										int randomResult=randomZ(mStage, ts);
 										if (randomResult%GOLDENLUCK==0) {//此时randomResult已经是10的整数倍
 											int itemOdd=(randomResult/10)%100;
+                                            printf("itemOdd is %d\n",itemOdd);
 											int emode=(mElsMode==ELS_MODE_REPLAY)?mElsRepMode:mElsMode;
 											if (emode==ELS_MODE_NET)//网络模式下只产生-1，-2两种道具，机率分别为70%，30%
 											{
