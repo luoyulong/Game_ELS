@@ -34,16 +34,15 @@ void ItemLayerPlayELS::DisplayItems()
 {
     for(int itemidx=0;itemidx<10;itemidx++)
     {
-        ItemBLKImg[itemidx]=new GEImage();
-        ItemBLKImg[itemidx]->setImage(Game_layer->mItemBLK[itemidx+1]);
+        ItemBLKBt[itemidx]=GEButton::buttonWithTarget(gamelayer, menu_selector(GameLayerPlayELS::PlayItemButton));
+        ItemBLKBt[itemidx]->setButtonImages(Game_layer->mItemBLK[itemidx+1], NULL,NULL);//Game_layer->mItemBLK[itemidx+1], Game_layer->mItemBLK[itemidx+1]);
         
-    
-        ItemBLKImg[itemidx]->setColor(1, 1, 1, 1);
+        ItemBLKBt[itemidx]->setColor(1, 1, 1, 1);
         int x=Game_layer->GetButtonRecItem(itemidx, 0)+Game_layer->GetButtonRecItem(itemidx, 2)-15;
         int y=Game_layer->GetButtonRecItem(itemidx, 1)+Game_layer->GetButtonRecItem(itemidx, 3)-2;
-        ItemBLKImg[itemidx]->setPosition(x,y);
-        
-        this->addChild(ItemBLKImg[itemidx]); 
+        ItemBLKBt[itemidx]->setPosition(x, y);
+      
+        this->addChild(ItemBLKBt[itemidx]); 
         
         //画道具
        // mRender->RenderImage(Game_layer->mItemBLK[itemidx+1], 

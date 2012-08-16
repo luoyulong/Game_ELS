@@ -92,6 +92,16 @@ private:
     void  AddNewAchieve(int achieve, float percent);
     
     
+    
+    //================Items=================
+    void ItemSubNLines(int idx, int lines);
+    void ItemPlusNLines(int idx, int lines);
+    void ItemCompress(int idx);
+    void ItemHammer(int idx);
+    void ItemShield(int idx);
+    void ItemBlock(int idx);
+    
+    
     /*--------ELS NET---------*/
     	bool  isRobotGame();
     int   GetSeatIdByidx(int idx);
@@ -109,6 +119,7 @@ private:
     bool  isMainArea(float x, float y);
     void PlayTouchAction();
     void PlayItemTouchAction();
+    void PlayItemButton(GEObject *);
     char GetTouchAct();//捕捉获取屏幕动作
     bool TestKey(int state, int k);//检测按键，如果某些键盘按下不松开,可以自动连发...
                                     //兼容拖动手势,手势也会产生键盘事件

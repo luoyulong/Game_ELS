@@ -441,7 +441,7 @@ inline void GameLayerPlayELS::UpdateELS(int i)
 	if (mGS[i].show_hold_time>0) mGS[i].show_hold_time--; //hold时高亮显示的时间
 	if (mGS[i].face_remain_time>0) mGS[i].face_remain_time--; //face道具
 	if (mGS[i].shield_remain_time>0) mGS[i].shield_remain_time--; //shield道具
-	/*if (mGS[i].item_trigger>0 && mGS[i].full_rows_count==0) //执行应用道具
+	if (mGS[i].item_trigger>0 && mGS[i].full_rows_count==0) //执行应用道具
 	{
 		if (mGS[i].item_trigger==151) 
 			ItemSubNLines(i, 1);
@@ -471,7 +471,7 @@ inline void GameLayerPlayELS::UpdateELS(int i)
 		mItemChoose=0;//这两个参数也在UseItem()的最后重置了
 		mItemTarget=4;//道具使用后，两个参数归为默认值。
 		TestDDown(i);
-	}*/
+	}
 	
 	//if(mGS[i].grect_stage>0) mGS[i].grect_stage-=4; //更新下落残影stage
 	//if (mGS[i].clear_stage>0) mGS[i].clear_stage--; //更新消行stage
@@ -488,16 +488,7 @@ inline void GameLayerPlayELS::UpdateELS(int i)
 	}
     
 	ClearFullRows(i, false); //消除填满的行
-	/*if(mGS[i].grect_stage==180) //绘制完直落阴影(grect_stage从240减到180),执行真正的直落操作
-	{
-		while(MoveBlk(DDOWN, i, false)!=REACH_BOTTOM)
-		{
-			if(mGS[i].game_over)
-				break;
-		}
-		NextBlk(i, false);
-		TestDDown(i);
-	}*/
+	
 }
 void GameLayerPlayELS::FallWithUpdate(int i)
 {

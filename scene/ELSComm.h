@@ -14,7 +14,7 @@
 #include "ELSDefine.h"
 #include "GEText.h"
 #include "GEImage.h"
-
+#include "GEButton.h"
 #define sidex1		423.0f
 #define sidey1		mainy+18.0f
 #define sidex2		423.0f
@@ -68,5 +68,5 @@ extern CCRenderBox* mRender;
 extern int	isFirstItem;
 extern int	mItemChoose;//选中了哪个道具，0未选中，1-10对应10个道具，使用道具时用于识别手势。
 extern 		int				mShowItemLimitNoticeStageLeft;//游戏中道具限制的提示，显示的剩余帧数。
-
+extern GEButton * ItemBLKBt[10];
 #endif

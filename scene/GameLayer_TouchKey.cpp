@@ -330,7 +330,7 @@ void GameLayerPlayELS::touchesEnded(GESet *pTouches, GEEvent *pEvent)
 			return;
 		}
 		if (mElsMode == ELS_MODE_SINGLE || mElsMode == ELS_MODE_AI || mElsMode == ELS_MODE_NET)
-			if (touch_x > mainx && touch_x < mainx+188 && touch_y < MAIN_TOUCH_Y) 
+			if (touch_x > mainx && touch_x < mainx+500)//&& touch_y < MAIN_TOUCH_Y) 
 				mItemTarget = 0;
 		if (mElsMode == ELS_MODE_AI || mElsMode == ELS_MODE_NET)
 			if (touch_x > 215 && touch_x < 280 && touch_y > 50 && touch_y < 170)
@@ -552,9 +552,6 @@ inline bool GameLayerPlayELS::isMainArea(float x, float y)
    
 }
 
-
-
-
 void GameLayerPlayELS::PlayItemTouchAction()
 {
 	//处理使用道具
@@ -579,9 +576,6 @@ void GameLayerPlayELS::PlayItemTouchAction()
 		}		
 	}
 }
-
-
-
 
 bool GameLayerPlayELS::TestKey(int state, int k)
 {	
@@ -694,4 +688,14 @@ void GameLayerPlayELS::ResetTouch()
 		printf("RESET TOUCH:sizeof(keymap[%d])=%lu(%d)\n", i, sizeof(g_key_map[i]), g_key_count[i]);
 		memset(g_key_map[i], 0, g_key_count[i]);
 	}
+}
+void GameLayerPlayELS::PlayItemButton(GEObject * p)
+{
+    int itemidx;
+    for(itemidx=0;itemidx<10;itemidx++)
+    {
+        if(p==ItemBLKBt[itemidx])
+            break;
+    }
+    mItemChoose=itemidx+1;
 }

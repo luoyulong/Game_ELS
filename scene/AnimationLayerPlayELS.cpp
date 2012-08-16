@@ -123,14 +123,14 @@ void AnimationLayerPlayELS::Render_ClearRow(int idx)
         ClearRowImage2_1[k]->setColor(1, 1, 1,0);
         ClearRowImage2_2[k]->setColor(1, 1, 1,0);
     }
-    k=0;
+    k=-1;
     for(int i=0;i<ZONG;i++)
 	{
 		bool fflag0=false;
 		
 		if(ClearRowstat[idx]>0)
         {  
-            printf("idx is %d full row and clearrowstat is %f\n",idx,ClearRowstat[0]);
+            //printf("idx is %d full row and clearrowstat is %f\n",idx,ClearRowstat[0]);
             for(int fm=0;fm<mGS[idx].full_rows_count%100;fm++)
 				if(i==mGS[idx].fullrows[fm])
 				{
@@ -151,13 +151,13 @@ void AnimationLayerPlayELS::Render_ClearRow(int idx)
     //mRender->EnableAddictiveDraw(true);
         
     
-        if(k==1)
+        if(k==0)
         {
             cstage=ClearRow_displaylength-ClearRowstat[idx]--;//0-ClearRow_displaylength..
-            printf("cstage is %d \n",cstage);
+           // printf("cstage is %d \n",cstage);
         }
         else {
-            printf("k is %d\n",k);
+            //printf("k is %d\n",k);
         }
     float tx,ty, xs;
     ty=boxy+(blkadjy+i*blksize)*boxs;
@@ -181,11 +181,9 @@ void AnimationLayerPlayELS::Render_ClearRow(int idx)
         ClearRowImage2_2[k]->setScaleX(xs*boxs);
         ClearRowImage2_2[k]->setScaleY(boxs);
         //2的角度要设置成3.1415926f
-        
         }
     }
     //mRender->EnableAddictiveDraw(false);
-
 }
 
    
@@ -206,11 +204,8 @@ void AnimationLayerPlayELS::Cancel_fall(int index)
 void AnimationLayerPlayELS::Update(float dt)
 {
    // int idx=0;
-    
-    
     RenderDrop(0);
-    Render_ClearRow(0);
-    
+    Render_ClearRow(0);    
 }
 
 

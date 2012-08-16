@@ -19,3 +19,4 @@ CCRenderBox* mRender;
 int				isFirstItem;
 int				mItemChoose;//选中了哪个道具，0未选中，1-10对应10个道具，使用道具时用于识别手势。
 int				mShowItemLimitNoticeStageLeft;//游戏中道具限制的提示，显示的剩余帧数。
+GEButton * ItemBLKBt[10];

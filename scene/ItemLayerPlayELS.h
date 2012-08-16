@@ -11,7 +11,7 @@
 #include "ELSDefine.h"
 #include "ELSComm.h"
 #include "GameLayerPlayELS.h"
-class ItemLayerPlayELS:public GELayer
+class ItemLayerPlayELS:public GEMenu
 {
 public:
     ItemLayerPlayELS();
@@ -32,6 +32,7 @@ private:
     CCImage *	mFace ;
     CCImage *	mUnlock ;
     GEImage *  ItemBLKImg[10];
+    
     // GEButton *mPause;
         
 };

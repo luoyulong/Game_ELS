@@ -56,7 +56,7 @@ void GameLayerPlayELS::Render(CCRenderBox* Render)
 	if (mElsMode==ELS_MODE_NET && g_net_achieve!=-1)
 		TestAchievement();
 */
-   // RenderItem();							//绘制道具
+    //RenderItem();							//绘制道具
 	RenderGameFrame();	
     RenderNextSave(mRender);						//绘制next和save块...
 	//mRender->SetColor(1, 1, 1, 1);
@@ -65,7 +65,6 @@ void GameLayerPlayELS::Render(CCRenderBox* Render)
     //void GameStatePlay::RenderItem(int idx, float mx, float my, float scale)
     //更改函数为RenderItem(int idx);
     //只Render自己的道具，其他人的道具只是记录但不显示
-
     
 }
 
