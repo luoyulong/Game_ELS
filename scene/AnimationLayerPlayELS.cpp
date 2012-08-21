@@ -200,17 +200,54 @@ void AnimationLayerPlayELS::Cancel_fall(int index)
     fallTimer->cancelTimer();
     fallstat[index]=-1;
 }
+void AnimationLayerPlayELS::New_UseItem(int _itemtype,int _startx,int _endx,int _starty,int _endy)
+{
+    {
+        float ralaph=1;
+        float bfsc=1.8f, bfa=0.6f, fa=0.9f, fsc=1.2f;
+        if (ralaph >= 0.3) {
+            float iux=_startx+(_endx-_startx)*(1.0-(ralaph-0.3)/0.7);
+            float iuy=_starty+(_endy-_starty)*(1.0-(ralaph-0.3)/0.7)+Game_layer->get_adjy_bygrect(0);
+            mRender->SetColor(1.0f, 1.0f, 1.0f, bfa);
+            mRender->RenderImage(Game_layer->mItemBLK[0], iux, iuy, 3.1415926f*2-ralaph*5, bfsc, bfsc);
+            mRender->SetColor(1.0f, 1.0f, 1.0f, fa);
+            mRender->RenderImage(Game_layer->mItemBLK[0], iux, iuy, ralaph*5, fsc, fsc);
+            mRender->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+            mRender->RenderImage(Game_layer->mItemBLK[_itemtype-20], iux, iuy);
+        }
+        else {
+            mRender->SetColor(1.0f, 1.0f, 1.0f, cos(ralaph/0.3));
+            mRender->SetColor(1.0f, 1.0f, 1.0f, bfa);
+            mRender->RenderImage(Game_layer->mItemBLK[0], _endx, _endy, 3.1415926f*2-ralaph*5, bfsc, bfsc);
+            //mRender->SetColor(1.0f, 1.0f, 1.0f, 1-ralaph);
+            mRender->SetColor(1.0f, 1.0f, 1.0f, fa);
+            mRender->RenderImage(Game_layer->mItemBLK[0], _endx, _endy, ralaph*5, fsc, fsc);
+            mRender->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+            mRender->RenderImage(Game_layer->mItemBLK[_itemtype-20], _endx, _endy);
+        }
+        
+    }
+    
+    
+    
+  
+    
+    
+    
+    
+    
+}  
+
+
+
 
 void AnimationLayerPlayELS::Update(float dt)
 {
    // int idx=0;
     RenderDrop(0);
-    Render_ClearRow(0);    
+    Render_ClearRow(0);
+    
 }
-
-
-
-
 
 
 void AnimationLayerPlayELS::Loadimages()
@@ -260,14 +297,29 @@ void AnimationLayerPlayELS::Setconfig()
         mainx=0, mainy=2;
     }
 }
-
-
-
-
-
+GESprite * AnimationLayerPlayELS::Display_Item(int itemtype, float posx, float posy)
+{
+    GESequenceFrames *countdownf = new GESequenceFrames();
+    GESprite *display_handler = new GESprite();
+    for (int i=0; i<4; i++) {
+        char tmp[32];
+        sprintf(tmp, "Gbig%d.png", i);
+        if(itemtype>20&&(i%2))//使用道具的时候星星和item图标切换显示
+        countdownf->addFrame(Game_layer->mItemBLK[0]);   
+        
+        countdownf->addFrame(Game_layer->mItemBLK[itemtype%20]);
+    }
+    display_handler->setAnimationFrames(countdownf);
+    display_handler->setPosition(posx,posy);
+    this->addChild(display_handler);
+    display_handler->setFrameSpeed(0.05);
+    display_handler->resume();
+    return display_handler;
+}
 void AnimationLayerPlayELS::Render(CCRenderBox* mRender)
 {
         Background_Snow(mRender,0);
+        
 }
 AnimationLayerPlayELS::~AnimationLayerPlayELS(){}
 

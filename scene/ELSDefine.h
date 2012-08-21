@@ -15,6 +15,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <algorithm>
+#include "GESprite.h"
 
 using namespace __gnu_cxx;
 
@@ -134,6 +135,7 @@ typedef struct	_itemmove {
 	float endy;
 	int   itemtype;
 	int   item_move_stage;
+    GESprite * display_handler;
 }ITEMMOVE;
 
 //分数相关的数据结构

@@ -131,6 +131,7 @@ int GameLayerPlayELS::ClearFullRows(int idx, bool ai)
 								new_itemmove.endx	  = (GetButtonRecItem(tmpitemtype-1, 0)+GetButtonRecItem(tmpitemtype-1, 2))-5;
 								new_itemmove.endy	  = (GetButtonRecItem(tmpitemtype-1, 1)+GetButtonRecItem(tmpitemtype-1, 3));
 								new_itemmove.item_move_stage = 60;
+                                new_itemmove.display_handler=NULL;
 								mItemFly.push_back(new_itemmove);
 							}
 						}
@@ -230,6 +231,7 @@ void GameLayerPlayELS::ClearRowWithUpdate(int argc,char * argv)
                         tmpitemtype=tmpitemtype%150;
                         gp->score+=5;
                         UpdateLevel(gp->score-5, gp, idx);
+                        
                         if (idx == 0) {
                             //增加新ITEMMOVE到vector
                             ITEMMOVE new_itemmove;
@@ -239,6 +241,7 @@ void GameLayerPlayELS::ClearRowWithUpdate(int argc,char * argv)
                             new_itemmove.endx	  = (GetButtonRecItem(tmpitemtype-1, 0)+GetButtonRecItem(tmpitemtype-1, 2))-5;
                             new_itemmove.endy	  = (GetButtonRecItem(tmpitemtype-1, 1)+GetButtonRecItem(tmpitemtype-1, 3));
                             new_itemmove.item_move_stage = 60;
+                            new_itemmove.display_handler=NULL;
                             mItemFly.push_back(new_itemmove);
                         }
                     }
@@ -916,6 +919,7 @@ bool GameLayerPlayELS::UseItem(int idx, int itemidx,int target)
 		new_itemmove.endy = (float)2*140*(target-1)+220;//这是其他三个玩家的小屏幕中央
 	}
 	new_itemmove.item_move_stage = 60;
+    new_itemmove.display_handler=NULL;
 	mItemFly.push_back(new_itemmove);
     
 	mItemChoose=0;

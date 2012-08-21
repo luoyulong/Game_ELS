@@ -320,6 +320,13 @@ void GameLayerPlayELS::touchesEnded(GESet *pTouches, GEEvent *pEvent)
 		g_need_hold=false;
 	}
 	
+    
+    
+    
+    
+    
+    
+    
 	//检测mItemTarget
 	//每次Touch结束时检测模mItemTarget，如果此时mItemChoose！=0,则检测到目标后立即使用道具。
 	if (mItemChoose != 0) {

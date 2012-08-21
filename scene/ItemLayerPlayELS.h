@@ -25,7 +25,8 @@ private:
 //    void Update(float dt);
    void Render(CCRenderBox* mRender);
 private:
-    GEText *mLFont;
+    CCFont *mLFont;
+    //GEText *mLFont;
     CCImage  *mItemSelected;
     CCImage  *mTempItem ;
     CCImage *mItemLimitNotice;

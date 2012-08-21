@@ -16,9 +16,11 @@ ItemLayerPlayELS::ItemLayerPlayELS()
     pScene->addChild(this,15);
 
     //init font
-    mLFont=new GEText();
-    mLFont->setFontSize(20.0f);
-    this->addChild(mLFont);
+    
+    mLFont=new CCFont(60.0f);
+    
+    //mLFont->setFontSize(20.0f);
+    //this->addChild(mLFont);
     
     
     mItemSelected=mAssetCommon->GetImage("itemselect.png");
@@ -62,12 +64,17 @@ void ItemLayerPlayELS::RenderItem()
     //绘制刚获得的道具
     for(vector<ITEMMOVE>::iterator it=Game_layer->mItemFly.begin(); it!=Game_layer->mItemFly.end();)
     {
+        printf("Item type is %d\n",it->itemtype);
         int _itemtype	= it->itemtype;
         int _startx		= it->startx;
         int _starty     = it->starty;
         int _endx		= it->endx;
         int _endy		= it->endy;
         int _itemstage	= it->item_move_stage;
+        if (it->display_handler==NULL) {
+            it->display_handler=Annimation_layer->Display_Item(_itemtype, _startx, _starty);
+        }
+        GESprite * _display_handler= it->display_handler;
         
         if (_itemstage==0) {
             if (_itemtype<20) {//如果是得道具，那么在stage=0时得到这个道具，把道具数量+1
@@ -77,6 +84,7 @@ void ItemLayerPlayELS::RenderItem()
                     Game_layer->mItemNum[_itemtype-1]++;
             }
             //从vector中移除这个动作
+            Annimation_layer->removeChild(_display_handler);
             it=Game_layer->mItemFly.erase(it);
             //判断是否是非网络模式下的第一个道具
             if (mElsMode!=ELS_MODE_NET && mElsMode!=ELS_MODE_REPLAY && isFirstItem==1 && g_options[9]>=0) { //不和hold的提示冲突
@@ -97,45 +105,54 @@ void ItemLayerPlayELS::RenderItem()
             if(_itemstage > 0) //还没有移动完
             {
                 float ralaph=_itemstage*1.0f/MAX_CLEAR_ITEM_STAGE;
-                if (_itemtype<20) {//得到道具时在原道具位置显示"+500"字样
+                if (_itemtype<20&&it==Game_layer->mItemFly.begin()) 
+                {//得到道具时在原道具位置显示"+500"字样
                     mRender->SetColor(1.0f, 1.0f, 1.0f, ralaph);
-                    mLFont->setPosition(_startx-10.0f, _starty);
-                //    mLFont->DrawString("+500", _startx-10.0f, _starty);
+                    //mLFont->setPosition(_startx-10.0f, _starty);
+                     char reward_s[4];
+                    int reward=Game_layer->mItemFly.size()*500;
+                    sprintf(reward_s,"+%d",reward);
+                    mLFont->DrawString(reward_s, _startx-10.0f, _starty);
+                    
                 }
                 mRender->SetColor(1.0f, 1.0f, 1.0f, 1-ralaph);
                 if (_itemtype>0 && _itemtype<20) //得到道具，显示对应的道具
-                    mRender->RenderImage(Game_layer->mItemBLK[_itemtype], 
-                                         _startx+(_endx-_startx)*(1.0-ralaph), 
-                                         _starty+(_endy-_starty)*(1.0-ralaph)+Game_layer->get_adjy_bygrect(0), 
-                                         0, 1.0f, 1.0f);
+                {  _display_handler->setPosition(_startx+(_endx-_startx)*(1.0-ralaph), _starty+(_endy-_starty)*(1.0-ralaph)+Game_layer->get_adjy_bygrect(0));
+                    // mRender->RenderImage(Game_layer->mItemBLK[_itemtype], 
+                      //                   _startx+(_endx-_startx)*(1.0-ralaph), 
+                        //                 _starty+(_endy-_starty)*(1.0-ralaph)+Game_layer->get_adjy_bygrect(0), 
+                          //               0, 1.0f, 1.0f);
+                }
                 else if (_itemtype>=20) //使用道具时，显示星星，还要加粒子效果
                 {
                     float bfsc=1.8f, bfa=0.6f, fa=0.9f, fsc=1.2f;
                     if (ralaph >= 0.3) {
                         float iux=_startx+(_endx-_startx)*(1.0-(ralaph-0.3)/0.7);
                         float iuy=_starty+(_endy-_starty)*(1.0-(ralaph-0.3)/0.7)+Game_layer->get_adjy_bygrect(0);
-                        mRender->SetColor(1.0f, 1.0f, 1.0f, bfa);
+                        _display_handler->setPosition(iux, iuy);
+                       /* mRender->SetColor(1.0f, 1.0f, 1.0f, bfa);
                         mRender->RenderImage(Game_layer->mItemBLK[0], iux, iuy, 3.1415926f*2-ralaph*5, bfsc, bfsc);
                         mRender->SetColor(1.0f, 1.0f, 1.0f, fa);
                         mRender->RenderImage(Game_layer->mItemBLK[0], iux, iuy, ralaph*5, fsc, fsc);
                         mRender->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-                        mRender->RenderImage(Game_layer->mItemBLK[_itemtype-20], iux, iuy);
+                        mRender->RenderImage(Game_layer->mItemBLK[_itemtype-20], iux, iuy);*/
                     }
                     else {
                         mRender->SetColor(1.0f, 1.0f, 1.0f, cos(ralaph/0.3));
                         mRender->SetColor(1.0f, 1.0f, 1.0f, bfa);
-                        mRender->RenderImage(Game_layer->mItemBLK[0], _endx, _endy, 3.1415926f*2-ralaph*5, bfsc, bfsc);
+                        _display_handler->setPosition(_endx,_endy);
+                       /*mRender->RenderImage(Game_layer->mItemBLK[0], _endx, _endy, 3.1415926f*2-ralaph*5, bfsc, bfsc);
                         //mRender->SetColor(1.0f, 1.0f, 1.0f, 1-ralaph);
                         mRender->SetColor(1.0f, 1.0f, 1.0f, fa);
                         mRender->RenderImage(Game_layer->mItemBLK[0], _endx, _endy, ralaph*5, fsc, fsc);
                         mRender->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-                        mRender->RenderImage(Game_layer->mItemBLK[_itemtype-20], _endx, _endy);
-                    }
+                        mRender->RenderImage(Game_layer->mItemBLK[_itemtype-20], _endx, _endy);*/
                     
+                    }
                 }
                 it->item_move_stage--;
                 ++it;
-            }
+                }
     }	
 
     mRender->SetColor(1, 1, 1, 1);
@@ -247,6 +264,7 @@ void ItemLayerPlayELS::RenderItem()
     else {
         lastunlock=0;
     }	
+    
 }
 
 void ItemLayerPlayELS::Render(CCRenderBox* mRender)
@@ -255,4 +273,6 @@ void ItemLayerPlayELS::Render(CCRenderBox* mRender)
     
 }
 
-ItemLayerPlayELS::~ItemLayerPlayELS(){}
+
+ItemLayerPlayELS::~ItemLayerPlayELS()
+{}

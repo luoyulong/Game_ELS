@@ -42,6 +42,7 @@ public:
     ~AnimationLayerPlayELS();
     void Background_Snow(CCRenderBox* mRender,int dir);
     void RendCountDown();
+    
     void Render(CCRenderBox* mRender);
     //void onEnter();
     void New_ClearRow(int index);
@@ -54,6 +55,9 @@ public:
     
     void Update(float dt);                                  //主循环更新
 
+    void New_UseItem(int,int,int,int,int);
+    GESprite * Display_Item(int itemtype,float posx,float posy);
+    //void Render_Item();
 private:
     //void buttonCallback(GEObject* pObj);
     void Loadimages();
