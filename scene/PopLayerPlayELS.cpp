@@ -13,7 +13,7 @@
 PopLayerPlayELS::PopLayerPlayELS()
 {
     GEScene* pScene = GEDirector::GetInstance()->getScene("GameScenePlayELS");
-    pScene->addChild(this,20);
+    pScene->addChild(this,10);
     mPause=new GEButton();
     mPause->setButtonColorOnPress(0, 0, 0, 50);
     mPause->setButtonImageNormal(mAssetCommon->GetImage("Bretry.png"));

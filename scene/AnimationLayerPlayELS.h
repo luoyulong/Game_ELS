@@ -20,16 +20,8 @@
 #include "GameLayerPlayELS.h"
 
 
-typedef struct _bm_object {
-	float x, y, scale, arc;
-	float angle, speed;
-	float scale_speed, arc_speed;
-	float r, g, b;
-	float alpha;
-	int   stage;
-} BMOBJ;
 
-static BMOBJ gs_bm_snow[SNOW_COUNT];
+
 
 
 
@@ -85,7 +77,7 @@ private:
     GESequenceFrames * m_pBackGround;
       
    
-    CCImage *mSnow;
+    
     
     
 

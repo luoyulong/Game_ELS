@@ -45,16 +45,14 @@ GameScenePlayELS::GameScenePlayELS()
     printf("GameScenePlayELS is:%p\n",pScene);
     
     // backgrounds
-    m_pBackGround = new GEImage();
-    m_pBackGround->setImage("playback.png");
-    m_pBackGround->setPosition(320,480);   
-    this->addChild(m_pBackGround);    
+     
     
     //new other layers
     new GameLayerPlayELS();
     new AnimationLayerPlayELS();
     new PopLayerPlayELS();
     new ItemLayerPlayELS();
+   new BackgroundLayerPlayELS();
     
     // new menu
     GEMenu* pMenu = new GEMenu();

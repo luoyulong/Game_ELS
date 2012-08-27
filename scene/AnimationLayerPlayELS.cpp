@@ -34,7 +34,6 @@ AnimationLayerPlayELS::AnimationLayerPlayELS()
 void AnimationLayerPlayELS::New_fall(int index)
 {
     
-    printf("new fall index %d \n",index);
     fallTimer=new GETimer();
     fallTimer->setNotifyTarget(gamelayer);
     fallTimer->setDuration(0.25);//设置定时期时间
@@ -255,7 +254,7 @@ void AnimationLayerPlayELS::Loadimages()
     assetbox=new CCAssetBox();
     assetbox->LoadResource("Play1.xml");
     assetbox->LoadResource("Play2.xml");
-    mSnow=assetbox->GetImage("newsnow.png");
+    
     
     //下落条动画对象的添加，初始时不显示，故aphla设置为0
     fallImg=assetbox->GetImage("dropbar.png");
@@ -318,74 +317,13 @@ GESprite * AnimationLayerPlayELS::Display_Item(int itemtype, float posx, float p
 }
 void AnimationLayerPlayELS::Render(CCRenderBox* mRender)
 {
-        Background_Snow(mRender,0);
         
 }
 AnimationLayerPlayELS::~AnimationLayerPlayELS(){}
 
 
 //绘制雪花或者气泡 dir=0,1
-void AnimationLayerPlayELS::Background_Snow(CCRenderBox* mRender,int dir)
-{
-    if (!init) {
-		for (int i=0; i<SNOW_COUNT; i++) {
-			gs_bm_snow[i].scale = rand()%100/100.0f;
-			gs_bm_snow[i].alpha = rand()%100/100.0f;			
-			gs_bm_snow[i].speed = (rand()%100/100.0f+0.5)*2;
-			gs_bm_snow[i].arc_speed = rand()%5/100.0f;
-			gs_bm_snow[i].angle = (rand()%100/100.0f+0.5)*3.1415926f/2.0f;
-			gs_bm_snow[i].x     = (rand()%4)*160+80;
-			gs_bm_snow[i].y     = rand()%100/100.0f*960.0f;
-			gs_bm_snow[i].r     = rand()%100/100.0f;
-			gs_bm_snow[i].g     = rand()%100/100.0f;
-			gs_bm_snow[i].b     = rand()%100/100.0f;			
-			gs_bm_snow[i].arc   = 0;
-			gs_bm_snow[i].stage = 200;
-			init=true;
-		}
-	}
-    
-    
-    else {
-		for (int i=0; i<SNOW_COUNT; i++) {
-			bool reborn;
-			
-			if (dir) 
-				reborn=(gs_bm_snow[i].x<0.0f || gs_bm_snow[i].y<0.0f);
-			else 
-				reborn=(gs_bm_snow[i].x>640.0f || gs_bm_snow[i].y>960.0f);
-			
-			if (reborn) {
-				gs_bm_snow[i].scale = rand()%100/100.0f;
-				gs_bm_snow[i].alpha = rand()%100/100.0f;			
-				gs_bm_snow[i].speed = (rand()%100/100.0f+0.5)*2;
-				gs_bm_snow[i].arc_speed = rand()%5/100.0f;
-				gs_bm_snow[i].angle = (rand()%100/100.0f+0.5)*3.1415926f/2.0f;
-				//gs_bm_snow[i].x     = rand()%100/100.0f*640.0f;
-				gs_bm_snow[i].x     = (rand()%4)*160+80;
-				gs_bm_snow[i].y     = dir?960.0f:0.0f;
-				gs_bm_snow[i].r     = rand()%100/100.0f;
-				gs_bm_snow[i].g     = rand()%100/100.0f;
-				gs_bm_snow[i].b     = rand()%100/100.0f;
-				gs_bm_snow[i].arc   = 0;
-				gs_bm_snow[i].stage = 200;
-			}
-			else {
-				float det=dir?-1:1;
-				gs_bm_snow[i].x += gs_bm_snow[i].speed*cos(gs_bm_snow[i].angle)*det;
-				gs_bm_snow[i].y += gs_bm_snow[i].speed*sin(gs_bm_snow[i].angle)*det;
-				gs_bm_snow[i].arc += gs_bm_snow[i].arc_speed;
-				gs_bm_snow[i].stage--;
-			}
-			//mRender->SetColor(gs_bm_snow[i].r, gs_bm_snow[i].g, gs_bm_snow[i].b, gs_bm_snow[i].alpha);
-			mRender->SetColor(1, 1, 1, gs_bm_snow[i].alpha);
-			mRender->EnableAddictiveDraw(true);
-			mRender->RenderImage(mSnow, gs_bm_snow[i].x, gs_bm_snow[i].y, gs_bm_snow[i].arc, gs_bm_snow[i].scale, gs_bm_snow[i].scale);
-			mRender->EnableAddictiveDraw(false);
-		} 
-	}
 
-}
 
 //绘制倒计时
 void AnimationLayerPlayELS::RendCountDown()

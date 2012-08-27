@@ -8,7 +8,11 @@
 
 #include <iostream>
 #include "ELSComm.h"
+struct GameSet_type GameSet;
 CCAssetBox*  mAssetCommon;
+CCSoundBox		*mSND;
+int             mWavCombo[8], mWavClear[4], mWavDrop, mWavMove, mWavWin, mWavTurn, mWavLose, 
+mWavLevelup, mWavItemAttack, mWavItemDefense, mWavClick, mWavPeeco;
 map<string, obstacles> obstacles_set;
 GELayer * gamelayer;
 GELayer * Annimationlayer;

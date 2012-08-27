@@ -68,7 +68,8 @@ private:
     void Update(float dt);                                  //主循环更新
     void UpdateELS(int i);                                  //检测攻击,应用道具，更新各种stage
     inline void UpdatePTSystem(float dt);                               //更新粒子系统
-    
+    void ProcessOver(int idx, bool ai);
+
     void PlayAutoDownAction(float dt);//update 方块的自动下落
     void DumpELS(int idx, const char *msg);    
     

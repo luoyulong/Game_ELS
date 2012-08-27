@@ -9,6 +9,7 @@
 #ifndef ThreeCard_ELSComm_h
 #define ThreeCard_ELSComm_h
 #include "CCAssetBox.h"
+#include "CCSoundBox.h"
 #include <map>
 #include "GELayer.h"
 #include "ELSDefine.h"
@@ -56,7 +57,14 @@ public:
         this->w=w;
     }
 };
-
+struct GameSet_type
+{
+    EMODE gamemode;
+};
+extern struct GameSet_type GameSet;
+extern  CCSoundBox		*mSND;
+extern int             mWavCombo[8], mWavClear[4], mWavDrop, mWavMove, mWavWin, mWavTurn, mWavLose, 
+mWavLevelup, mWavItemAttack, mWavItemDefense, mWavClick, mWavPeeco;
 extern  CCAssetBox *mAssetCommon;
 extern  map<string, obstacles> obstacles_set;
 extern  GELayer * gamelayer;

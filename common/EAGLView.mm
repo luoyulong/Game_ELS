@@ -228,7 +228,7 @@ static GETouch *s_pTouches[MAX_TOUCHES];
 		mDirector = GEDirector::GetInstance();
 		//mDirector->setDeviceOrientation(DeviceOrientationLandscapeLeft);
       //  mDirector->setDeviceOrientation(DeviceOrientationLandscapeLeft);
-        mDirector->setShowFPS(true);
+       // mDirector->setShowFPS(true);
 		//gameCenterManager = GEGameCenterManager::GetInstance();
 
 		//script test,don't open now.

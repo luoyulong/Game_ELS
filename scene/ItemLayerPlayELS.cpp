@@ -19,9 +19,6 @@ ItemLayerPlayELS::ItemLayerPlayELS()
     
     mLFont=new CCFont(60.0f);
     
-    //mLFont->setFontSize(20.0f);
-    //this->addChild(mLFont);
-    
     
     mItemSelected=mAssetCommon->GetImage("itemselect.png");
     mTempItem = mAssetCommon->GetImage("tempitem.png");   
@@ -43,13 +40,10 @@ void ItemLayerPlayELS::DisplayItems()
         int x=Game_layer->GetButtonRecItem(itemidx, 0)+Game_layer->GetButtonRecItem(itemidx, 2)-15;
         int y=Game_layer->GetButtonRecItem(itemidx, 1)+Game_layer->GetButtonRecItem(itemidx, 3)-2;
         ItemBLKBt[itemidx]->setPosition(x, y);
-      
+       
         this->addChild(ItemBLKBt[itemidx]); 
         
-        //画道具
-       // mRender->RenderImage(Game_layer->mItemBLK[itemidx+1], 
-         //                    );
-   //     mRender->SetColor(1, 1, 1, 0.4f);
+     
       //  if(mElsMode!=ELS_MODE_NET)
         //    mRender->RenderImage(mTempItem, 
           //                       Game_layer->GetButtonRecItem(itemidx, 0)+Game_layer->GetButtonRecItem(itemidx, 2)-15, 
@@ -64,7 +58,6 @@ void ItemLayerPlayELS::RenderItem()
     //绘制刚获得的道具
     for(vector<ITEMMOVE>::iterator it=Game_layer->mItemFly.begin(); it!=Game_layer->mItemFly.end();)
     {
-        printf("Item type is %d\n",it->itemtype);
         int _itemtype	= it->itemtype;
         int _startx		= it->startx;
         int _starty     = it->starty;
@@ -108,46 +101,24 @@ void ItemLayerPlayELS::RenderItem()
                 if (_itemtype<20&&it==Game_layer->mItemFly.begin()) 
                 {//得到道具时在原道具位置显示"+500"字样
                     mRender->SetColor(1.0f, 1.0f, 1.0f, ralaph);
-                    //mLFont->setPosition(_startx-10.0f, _starty);
-                     char reward_s[4];
+                    char reward_s[4];
                     int reward=Game_layer->mItemFly.size()*500;
                     sprintf(reward_s,"+%d",reward);
-                    mLFont->DrawString(reward_s, _startx-10.0f, _starty);
+                    mLFont->DrawString(reward_s, _startx-10.0f, _starty-20);
                     
                 }
-                mRender->SetColor(1.0f, 1.0f, 1.0f, 1-ralaph);
                 if (_itemtype>0 && _itemtype<20) //得到道具，显示对应的道具
                 {  _display_handler->setPosition(_startx+(_endx-_startx)*(1.0-ralaph), _starty+(_endy-_starty)*(1.0-ralaph)+Game_layer->get_adjy_bygrect(0));
-                    // mRender->RenderImage(Game_layer->mItemBLK[_itemtype], 
-                      //                   _startx+(_endx-_startx)*(1.0-ralaph), 
-                        //                 _starty+(_endy-_starty)*(1.0-ralaph)+Game_layer->get_adjy_bygrect(0), 
-                          //               0, 1.0f, 1.0f);
                 }
                 else if (_itemtype>=20) //使用道具时，显示星星，还要加粒子效果
                 {
-                    float bfsc=1.8f, bfa=0.6f, fa=0.9f, fsc=1.2f;
                     if (ralaph >= 0.3) {
                         float iux=_startx+(_endx-_startx)*(1.0-(ralaph-0.3)/0.7);
                         float iuy=_starty+(_endy-_starty)*(1.0-(ralaph-0.3)/0.7)+Game_layer->get_adjy_bygrect(0);
                         _display_handler->setPosition(iux, iuy);
-                       /* mRender->SetColor(1.0f, 1.0f, 1.0f, bfa);
-                        mRender->RenderImage(Game_layer->mItemBLK[0], iux, iuy, 3.1415926f*2-ralaph*5, bfsc, bfsc);
-                        mRender->SetColor(1.0f, 1.0f, 1.0f, fa);
-                        mRender->RenderImage(Game_layer->mItemBLK[0], iux, iuy, ralaph*5, fsc, fsc);
-                        mRender->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-                        mRender->RenderImage(Game_layer->mItemBLK[_itemtype-20], iux, iuy);*/
                     }
                     else {
-                        mRender->SetColor(1.0f, 1.0f, 1.0f, cos(ralaph/0.3));
-                        mRender->SetColor(1.0f, 1.0f, 1.0f, bfa);
-                        _display_handler->setPosition(_endx,_endy);
-                       /*mRender->RenderImage(Game_layer->mItemBLK[0], _endx, _endy, 3.1415926f*2-ralaph*5, bfsc, bfsc);
-                        //mRender->SetColor(1.0f, 1.0f, 1.0f, 1-ralaph);
-                        mRender->SetColor(1.0f, 1.0f, 1.0f, fa);
-                        mRender->RenderImage(Game_layer->mItemBLK[0], _endx, _endy, ralaph*5, fsc, fsc);
-                        mRender->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-                        mRender->RenderImage(Game_layer->mItemBLK[_itemtype-20], _endx, _endy);*/
-                    
+                       _display_handler->setPosition(_endx,_endy);
                     }
                 }
                 it->item_move_stage--;
@@ -219,22 +190,7 @@ void ItemLayerPlayELS::RenderItem()
         }
     }
     
-    //绘制应用的道具
-    //只绘制自己的浮动效果
-    //取消粒子效果
-    /*
-     if (mGS[0].itemuse_stage>0) {
-     static float rx, ry, ra, rs;
-     if (mGS[0].itemuse_stage%5==0) {
-     rx=rand()%10;
-     ry=rand()%10;
-     ra=rand()%10/100.0f;
-     rs=rand()%50/100.0f;
-     }
-     //mParticleSystem2->Render(0, 0);
-     mRender->SetColor(1, 1, 1, 1);
-     mGS[0].itemuse_stage--;
-     }*/
+    
 
     //绘制解锁新的试炼阵...
     static int lastunlock=0;

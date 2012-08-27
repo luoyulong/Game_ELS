@@ -16,6 +16,7 @@
 #include "AnimationLayerPlayELS.h"
 #include "PopLayerPlayELS.h"
 #include "ItemLayerPlayELS.h"
+#include "BackgroundLayerPlayELS.h"
 #define MAIN_MENU_MAX_BUTTON 14
 #define NET_CONNECT_BUFFER    1024
 

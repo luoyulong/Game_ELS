@@ -48,8 +48,6 @@ void GameLayerPlayELS::ItemSubNLines(int idx, int lines)
 	{
 		gp->full_rows_count=fillcount+100; //加上100，是为了让clearfullrows知道，这是道具造成的满行，不要加攻击，不要加道具
 		Annimation_layer->New_ClearRow(0);
-        
-      //  gp->clear_stage=SET_CLEAR_STAGE;
 	}
 }
 

@@ -27,11 +27,33 @@ GameLayerPlayELS::GameLayerPlayELS()
     m_pPlayBoard = new GEImage();
     m_pPlayBoard->setImage("kuang.png");
     m_pPlayBoard->setPosition(320,480);   
-   // this->addChild(m_pPlayBoard);    
+    //this->addChild(m_pPlayBoard);    
     mAssetCommon=new CCAssetBox();
     mAssetCommon->LoadResource("Loading.xml");
     mAssetCommon->LoadResource("Play1.xml");
     
+    mSND = CCSoundBox::GetInstance();
+    
+    for (int i=3; i<=10; i++) {
+        char tmp[32];
+        sprintf(tmp, "combo%d.wav", i);
+        mWavCombo[i-3]=mSND->LoadSound(tmp);
+    }
+    mWavClear[0] = mSND->LoadSound("clear1.wav");
+    mWavClear[1] = mSND->LoadSound("clear2.wav");
+    mWavClear[2] = mSND->LoadSound("clear3.wav");
+    mWavClear[3] = mSND->LoadSound("clear4.wav");
+    
+    mWavDrop  = mSND->LoadSound("drop.wav");
+    mWavMove  = mSND->LoadSound("move.wav");
+    mWavTurn  = mSND->LoadSound("turn.wav");
+    mWavWin   = mSND->LoadSound("win.wav");
+    mWavLose  = mSND->LoadSound("lose.wav");
+    mWavLevelup=mSND->LoadSound("levelup.wav");
+    mWavPeeco = mSND->LoadSound("peeco.wav");
+    
+    g_options[1]=1;
+    mBJIdx=1;
     mCountDownTimeLeft=0;
     mainx=54;
     mainy=2;
@@ -42,7 +64,7 @@ GameLayerPlayELS::GameLayerPlayELS()
     mParticleSystem2->MoveTo(0, 0, true);
     mFont   = new CCFont(28.0f);
     mBFont  = new CCFont(18.0f);
-    mLFont  = new CCFont(20.0f);
+    mLFont  = new CCFont(30.0f);
     mNanDu=1;//难度关系到方块下落的速度
     ResetImg();
     ResetELS();

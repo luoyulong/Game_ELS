@@ -83,7 +83,7 @@ void GameLayerPlayELS::UpdateLevel(int oldscore, GSTAT *gp, int idx)
 			gp->levelup_stage=SET_LEVELUP_STAGE;
 		if (g_options[1]) 
 		{
-			//printf("LEVEL UP WAV........\n");
+			printf("LEVEL UP WAV........\n");
 			//mSND->PlaySound(mWavLevelup);
 		}
 	}
@@ -518,8 +518,8 @@ void GameLayerPlayELS::ResetImg()
 	
 	for(int i=0;i<10;i++)
 	{
-		//custom block
-		sprintf(tmp, "fk_kuang.png", i);
+		//custom block		
+        sprintf(tmp, "fk%d_kuang.png", i);
 		mYingBLK[i]=mAssetCommon->GetImage(tmp);
 		
 		sprintf(tmp, "fk%d.png", i+1);
@@ -731,9 +731,9 @@ void GameLayerPlayELS::GenRandomBlockQueue(long seed)
 		if (tmpreplace%3==0) 
 		{
 			if (tmptype==3 || tmptype==4) 
-				tmptype=2;
+                tmptype=2;
 		}
-		mBlockQueue[i]=6;//tmptype;
+		mBlockQueue[i]=tmptype;
 		printf("%d", mBlockQueue[i]);
 	}
 	printf("\n");
@@ -937,7 +937,6 @@ void GameLayerPlayELS::PlayActionBase(char *act, int index)
 	char aline[2],aseed[32];
 	int ialine, iaseed;
 	u8 tmode=(mElsMode==ELS_MODE_REPLAY)?mElsRepMode:mElsMode;
-	
     
    Annimation_layer->Cancel_fall(index);
 
@@ -1048,8 +1047,7 @@ void GameLayerPlayELS::PlayActionBase(char *act, int index)
         {
             ((AnimationLayerPlayELS *)Annimationlayer)->New_fall(index);
             
-            // luoyulong mGS[index].grect_stage = 240;
-		}	
+        }	
             break;
 		case 'D':
 			if(MoveBlk(DOWN, index, false)==REACH_BOTTOM)
@@ -1486,7 +1484,7 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
 	switch (dir)
 	{
 		case TURN:
-			x=cx,y=cy,z=(cz+(mTurnMode?-1:1)+4)%4;
+            x=cx,y=cy,z=(cz+(mTurnMode?-1:1)+4)%4;
 			/*if(!ai)
 			{
 				if (idx==0) 
@@ -1752,11 +1750,12 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
 					
 					//调用NextBlk会调用MoveBlk(SET),
 					//此时方块刚出来就有碰撞表明Game Over了
-					/*if(dir==SET) 
+					if(dir==SET) 
 					{
-						ProcessOver(idx, ai);
+                        printf("Game is over!]\n");
+					ProcessOver(idx, ai);
 						mAdventureWin=false;
-					}*/
+					}
 					return NORMAL;
 				}
 			}	
@@ -1768,8 +1767,8 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
 			gp->grid[y+i][x+j]+=blkdat[type][z][i*4+j];
 	
 	gp->cur_x=x, gp->cur_y=y, gp->cur_z=z;
-	
-	if (dir==LEFT || dir==RIGHT)
+	//应该是一下子变了2个形状
+//	if (dir==LEFT || dir==RIGHT)
 		/*if(!ai)
 		{
 			if (idx==0) 
@@ -2085,3 +2084,123 @@ void GameLayerPlayELS::FireAchievementMovie(int idx, int achid)
 	mGS[idx].achv_list[mGS[idx].achv_count]=achid;
 	mGS[idx].achv_count++;
 }
+
+void GameLayerPlayELS::ProcessOver(int idx, bool ai)
+{
+	GSTAT *gp;
+	gp = &mGS[idx];
+	gp->game_over=true;
+	
+	gp->grect_stage=0;
+	
+	if (ai) 
+		return;
+	
+	if (g_options[0]) mSND->SetMusicVolume(5);
+	
+	//网络对战模式，向服务器发送over消息...
+	if (mElsMode==ELS_MODE_NET) {
+	//	SendOver(idx);
+	}
+	
+	//冒险模式...
+	if(mElsMode==ELS_MODE_SINGLE && mBJIdx!=0)
+	{
+		if (mAdventureWin) {
+			mGS[0].score+=10*(g_bmp_time[mBJIdx]-timeused);
+			mGS[0].tmpstar=0;//此局所得的星星
+			if (timeused<= g_bmp_time[mBJIdx]*0.7)
+				mGS[0].tmpstar=3;
+			else if(timeused<=g_bmp_time[mBJIdx]*0.85)
+				mGS[0].tmpstar=2;
+			else 
+				mGS[0].tmpstar=1;
+			if (mGS[0].tmpstar>g_star_bmp[mBJIdx-1]) {
+				g_star_bmp[mBJIdx-1]=mGS[0].tmpstar;//如果所得星星比之前记录高，则更新。
+				WriteScore();
+			}
+			
+			if (g_options[1])
+                mSND->PlaySound(mWavWin);
+			TestAchievement();
+		}
+		else {
+			if (g_options[1]) 
+                mSND->PlaySound(mWavLose);
+		}
+        
+	}
+	
+	//本地对战模式（AI模式）...
+	if(idx==1 && mElsMode!=ELS_MODE_NET)
+	{
+		mGS[0].score+=1000*(mNanDu+1);
+		if (g_options[1]) mSND->PlaySound(mWavWin);
+		if(mElsMode == ELS_MODE_AI)
+		{
+			g_gamecount[0][mNanDu][1]++;
+			float wincount, tcount, winrate;
+			wincount=g_gamecount[0][mNanDu][1]*1.0f;
+			tcount  =g_gamecount[0][mNanDu][0]*1.0f;
+			winrate =wincount/tcount;
+			/*if (mNanDu==1 && winrate>=0.3f && wincount>=5) 
+				SetXunZhang(2);
+			if (mNanDu==2 && winrate>=0.5f && wincount>=10) 
+				SetXunZhang(1);
+			if (mNanDu==3 && wincount>=30) 
+				SetXunZhang(0);*/
+		}
+		if(mElsMode == ELS_MODE_SINGLE)
+			g_gamecount[0][mNanDu][1]++;
+		WriteScore();
+	}
+	else {
+		if (g_options[1]) mSND->PlaySound(mWavLose);
+	}
+    
+	
+	//计算分数本地排行榜...
+	if((mElsMode==ELS_MODE_SINGLE) || (mElsMode==ELS_MODE_AI))
+	{
+		vector<HSCORE*> *tmp;
+		//if(mElsMode==ELS_MODE_SINGLE)
+		tmp=&g_mvHS;
+		size_t l;
+		HSCORE *phs = new HSCORE;
+		phs->score = mGS[0].score;
+		phs->hang  = mGS[0].lines;
+		phs->combo = mGS[0].max_combo;
+		sprintf(phs->date, "%fs", timeused);
+		phs->is_current = true;
+		for(l=0; l<g_mvHS.size(); l++)
+			g_mvHS[l]->is_current = false;
+		tmp->push_back(phs);
+		sort(tmp->begin(), tmp->end(), cmp_score);
+		if(tmp->size()>=11)
+		{
+			SAFE_DELETE((*tmp)[10]);
+			tmp->erase(tmp->end()-1);
+		}
+		mNeed_process_record = false;
+		for(l=0; l<tmp->size(); l++)
+		{
+			if((*tmp)[l]->is_current)
+			{
+				mNeed_process_record = true;
+				break;
+			}
+		}
+		if(mNeed_process_record)
+		{
+			printf("need write score for new record\n");
+			WriteScore();
+		}
+	/*	if (mElsMode==ELS_MODE_SINGLE && mBJIdx==0)
+			mApp->isNewScore=mGS[0].score*100;
+	*/}
+}
+
+
+
+
+

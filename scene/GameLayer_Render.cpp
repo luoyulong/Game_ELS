@@ -147,6 +147,7 @@ void GameLayerPlayELS::RenderNextSave(CCRenderBox* mRender)
 
 void GameLayerPlayELS::RenderMain(int idx, float boxx, float boxy, float boxs,CCRenderBox* mRender)
 {
+    
 //	int l1x1=100, l1y1=100, l1x2=0;
 	int i,j,bi;
 	
@@ -256,125 +257,8 @@ void GameLayerPlayELS::RenderMain(int idx, float boxx, float boxy, float boxs,CC
 	//绘制玩家名字...
 	if (idx==0)
 		mRender->SetColor(0.25f, 0.75f, 1, 0.95f);
-	u8 tmode=(mElsMode==ELS_MODE_REPLAY)?mElsRepMode:mElsMode;
-	if (tmode==ELS_MODE_NET) 
-	{
-		if (isRobotGame()) 
-		{
-			if(idx==1) mRender->SetColor(1, 0, 1, 0.8f);
-			if(idx==2) mRender->SetColor(0.1f, 0.1f, 0.1f, 0.8f);
-			if(idx==3) mRender->SetColor(0.1f, 0.1f, 0.1f, 0.8f);
-		}
-		else 
-		{
-			if (idx==1)
-			{
-				if(g_seats[GetSeatIdByidx(1)-1].userid!=0)
-					mRender->SetColor(1, 0, 1, 0.8f);
-				else 
-					mRender->SetColor(0.1f, 0.1f, 0.1f, 1);
-			}
-			if (idx==2)
-			{
-				if(g_seats[GetSeatIdByidx(2)-1].userid!=0)
-					mRender->SetColor(0, 1, 1, 0.8f);
-				else 
-					mRender->SetColor(0.1f, 0.1f, 0.1f, 1);
-			}
-			if (idx==3)
-			{
-				if(g_seats[GetSeatIdByidx(3)-1].userid!=0)
-					mRender->SetColor(1, 1, 0, 0.8f);
-				else 
-					mRender->SetColor(0.1f, 0.1f, 0.1f, 1);
-			}
-		}
-		
-		//background
-		CCImage *tmpnbk=idx?mNameSBk:mNameBk;
-		int ax=idx?75:234, ay=idx?276:838;
-		mRender->RenderImage(tmpnbk, boxx+ax, boxy+ay+get_adjy_bygrect(idx)*boxs);
-		
-		//name
-		char tmpname[128];
-		int  seatid=GetSeatIdByidx(idx);
-		if (isRobotGame()&&idx==1) seatid=1;//机器人seatid肯定是1，idx肯定是1
-		CCFont *tmpfont=idx?mBFont:mLFont;
-		ax=idx?80:235, ay=idx?264:828;
-		if(isRobotGame())
-		{
-			if (idx==0) {
-				snprintf(tmpname, 128, "%s", g_seats[seatid-1].name);
-				mRender->SetColor(1, 1, 1, 1);
-				tmpfont->DrawCString(tmpname, boxx+ax, boxy+ay+get_adjy_bygrect(idx)*boxs+3);
-			}
-			else if (idx==1 && mRandomSeed!=0) {
-				snprintf(tmpname, 128, "%s", g_robotname[mRandomSeed%235]);
-				mRender->SetColor(1, 1, 1, 1);
-				int adjtx=(strlen(tmpname)-6)*4;
-				float tx=boxx+ax-32-adjtx;
-				//printf("%d,%s,%d,%f\n",mRandomSeed%235,tmpname,adjtx,tx);
-				tmpfont->DrawString(tmpname, tx, boxy+ay+get_adjy_bygrect(idx)*boxs+1);
-			}
-			else {
-				snprintf(tmpname, 128, "%s", "no player");
-				mRender->SetColor(1, 1, 1, 0.6f);
-				mBFont->DrawString(tmpname, boxx+36, boxy+160);
-			}
-		}
-		else 
-		{
-			if(g_seats[seatid-1].userid!=0)
-			{
-				snprintf(tmpname, 128, "%s", g_seats[seatid-1].name);
-				mRender->SetColor(1, 1, 1, 1);
-				//if (idx<=1 || !isRobotGame())
-				//{
-                //printf("idx=%d boxx=%f ax=%d adjnamex=%d x=%f\n", idx, boxx, ax, adjnamex, boxx+ax-adjnamex);
-                tmpfont->DrawCString(tmpname, boxx+ax, boxy+ay+get_adjy_bygrect(idx)*boxs+3);
-				//}
-			}
-			else {
-				snprintf(tmpname, 128, "%s", "no player");
-				mRender->SetColor(1, 1, 1, 0.6f);
-				mBFont->DrawString(tmpname, boxx+36, boxy+160);
-			}
-		}
-	}
-	if (tmode==ELS_MODE_AI) 
-	{
-		//background
-		CCImage *tmpnbk=idx?mNameSBk:mNameBk;
-		int ax=idx?75:234, ay=idx?276:840;
-		if(idx==1) mRender->SetColor(1, 0, 1, 0.8f);
-		mRender->RenderImage(tmpnbk, boxx+ax, boxy+ay+get_adjy_bygrect(idx)*boxs);
-		
-		//name
-		mRender->SetColor(1, 1, 1, 1);
-		char tmpname[2][64]={"Fighting Offline", "Robot.AI"};
-		CCFont *tmpfont=idx?mBFont:mLFont;
-		ax=idx?40:168, ay=idx?264:828;
-		tmpfont->DrawString(tmpname[idx], boxx+ax, boxy+ay+get_adjy_bygrect(idx)*boxs);
-	}
-	if (tmode==ELS_MODE_SINGLE) 
-	{
-		//only idx 0
-		mRender->RenderImage(mNameBk, boxx+234, boxy+840+get_adjy_bygrect(idx));
-		mRender->SetColor(1, 1, 1, 1);
-		mLFont->DrawString("Classic Mode", boxx+168, boxy+828+get_adjy_bygrect(idx)*boxs);
-		//冒险模式下倒数第二行的高光条
-		if (mBJIdx!=0) {
-			//绘制倒数第二行的高光条
-			//mRender->SetColor(1.0f,1.0f,1.0f,1.0f);
-			mRender->EnableAddictiveDraw(true);
-			//int nn=mStage%200;
-			float alp=-1*pow((float)(mStage%300)/150.0-1, 2)+1.0;
-			mRender->SetColor(1.0f, 1.0f, 1.0f, 0.5+0.5*alp);
-			mRender->RenderImage(m2ndhlight, 235, 741);
-			mRender->EnableAddictiveDraw(false);
-			//mRender->SetColor(1.0f,1.0f,1.0f,1.0f);
-		}
-	}
+	
+
 }
 
 
