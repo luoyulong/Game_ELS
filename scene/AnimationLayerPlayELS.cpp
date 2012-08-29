@@ -34,18 +34,22 @@ AnimationLayerPlayELS::AnimationLayerPlayELS()
 void AnimationLayerPlayELS::New_fall(int index)
 {
     
-    fallTimer=new GETimer();
-    fallTimer->setNotifyTarget(gamelayer);
-    fallTimer->setDuration(0.25);//设置定时期时间
-    fallTimer->setFuncOnTimerComplete(schedule_selector(GameLayerPlayELS::FallWithUpdate)); 
-    fallTimer->resume();
+    if(index>0) printf("fall by index %d \n",index);
+    fallTimer[index]=new GETimer();
+    fallTimer[index]->setNotifyTarget(gamelayer);
+    fallTimer[index]->setDuration(0.25);//设置定时期时间
+    fallTimer[index]->setFuncOnTimerComplete(general_selector(GameLayerPlayELS::FallWithUpdate)); 
+    char * argv= (char *)malloc(1*sizeof(char));
+    argv[0]=index;
+    fallTimer[index]->setParameterOnTimerComplete(1,argv);
+    fallTimer[index]->resume();
     fallstat[index]=0;
      
 }
 
 void AnimationLayerPlayELS::RenderDrop(int idx)
 {
-	//not shades for other people.
+	//小窗口无下落效果
 	if (idx!=0)
 		return;
 	
@@ -88,48 +92,47 @@ void AnimationLayerPlayELS::RenderDrop(int idx)
 	int rx = mainx+l1x1*blksize-blksize/2+blkadjx+rw/2;
 	int ry = mainy+100+l1y1*blksize+rh/2; 
     float alpha=(9-fallstat[idx])/9*0.5f;
-    fallImage->setColor(1, 1, 1, alpha);
-    fallImage->setPosition(rx, ry);
-    fallImage->setScaleX(rw/84.0f);
-    fallImage->setScaleY(rh/214.0f);
+    fallImage[idx]->setColor(1, 1, 1, alpha);
+    fallImage[idx]->setPosition(rx, ry);
+    fallImage[idx]->setScaleX(rw/84.0f);
+    fallImage[idx]->setScaleY(rh/214.0f);
     
 }
 
 
 void AnimationLayerPlayELS::New_ClearRow(int idx)
 {
-    ClearRowTimer=new GETimer();
-    ClearRowTimer->setNotifyTarget(gamelayer);//
-    ClearRowTimer->setDuration(ClearRow_displaylength/60);//设置定时期时间
-    ClearRowTimer->setFuncOnTimerComplete(general_selector(GameLayerPlayELS::ClearRowWithUpdate)); 
+    ClearRowTimer[idx]=new GETimer();
+    ClearRowTimer[idx]->setNotifyTarget(gamelayer);//
+    ClearRowTimer[idx]->setDuration(ClearRow_displaylength/60);//设置定时期时间
+    ClearRowTimer[idx]->setFuncOnTimerComplete(general_selector(GameLayerPlayELS::ClearRowWithUpdate)); 
     char * argv= (char *)malloc(2*sizeof(char));
     argv[0]=idx;
     argv[1]=false;
-    ClearRowTimer->setParameterOnTimerComplete(2,argv);
-    ClearRowTimer->resume();
+    ClearRowTimer[idx]->setParameterOnTimerComplete(2,argv);
+    ClearRowTimer[idx]->resume();
     ClearRowstat[idx]=ClearRow_displaylength;   
 }
 
 
 void AnimationLayerPlayELS::Render_ClearRow(int idx)
 {
+    
     int k;
     int cstage=0;
     //reset the clear image invisible
     for(k=0;k<4;k++)
     {   
-        ClearRowImage1[k]->setColor(1, 1, 1,0);
-        ClearRowImage2_1[k]->setColor(1, 1, 1,0);
-        ClearRowImage2_2[k]->setColor(1, 1, 1,0);
+        ClearRowImage1[idx][k]->setColor(1, 1, 1,0);
+        ClearRowImage2_1[idx][k]->setColor(1, 1, 1,0);
+        ClearRowImage2_2[idx][k]->setColor(1, 1, 1,0);
     }
     k=-1;
     for(int i=0;i<ZONG;i++)
 	{
 		bool fflag0=false;
-		
 		if(ClearRowstat[idx]>0)
         {  
-            //printf("idx is %d full row and clearrowstat is %f\n",idx,ClearRowstat[0]);
             for(int fm=0;fm<mGS[idx].full_rows_count%100;fm++)
 				if(i==mGS[idx].fullrows[fm])
 				{
@@ -145,58 +148,51 @@ void AnimationLayerPlayELS::Render_ClearRow(int idx)
         k++;
     float boxs=1.0;
     if(idx!=0) boxs=sidesc;
-    int boxx=mainx;
-    int boxy=mainy;
-    //mRender->EnableAddictiveDraw(true);
+    int boxx=gobal_boxx[idx];
+    int boxy=gobal_boxy[idx];
         
     
         if(k==0)
-        {
             cstage=ClearRow_displaylength-ClearRowstat[idx]--;//0-ClearRow_displaylength..
-           // printf("cstage is %d \n",cstage);
-        }
-        else {
-            //printf("k is %d\n",k);
-        }
+        
     float tx,ty, xs;
     ty=boxy+(blkadjy+i*blksize)*boxs;
     tx=boxx+(blkadjx-20)*boxs;
     xs=(20-cstage)*(1.0f/12.0f);
     if (cstage<8) {
-        ClearRowImage1[k]->setColor(1, 1, 1, 0.75f);
-        ClearRowImage1[k]->setPosition(tx+HENG/2*blksize*boxs,  ty);
-        ClearRowImage1[k]->setScaleX(10.5f*boxs);
-        ClearRowImage1[k]->setScaleY(boxs);
+        ClearRowImage1[idx][k]->setColor(1, 1, 1, 0.75f);
+        ClearRowImage1[idx][k]->setPosition(tx+HENG/2*blksize*boxs,  ty);
+        ClearRowImage1[idx][k]->setScaleX(10.5f*boxs);
+        ClearRowImage1[idx][k]->setScaleY(boxs);
     }
     else {
-        ClearRowImage2_1[k]->setColor(1, 1, 1, 0.75f);
-        ClearRowImage2_1[k]->setPosition(tx+xs*2.5f*blksize*boxs, ty);
-        ClearRowImage2_1[k]->setScaleX(xs*boxs);
-        ClearRowImage2_1[k]->setScaleY(boxs);
+        ClearRowImage2_1[idx][k]->setColor(1, 1, 1, 0.75f);
+        ClearRowImage2_1[idx][k]->setPosition(tx+xs*2.5f*blksize*boxs, ty);
+        ClearRowImage2_1[idx][k]->setScaleX(xs*boxs);
+        ClearRowImage2_1[idx][k]->setScaleY(boxs);
         
         
-        ClearRowImage2_2[k]->setColor(1, 1, 1, 0.75f);
-        ClearRowImage2_2[k]->setPosition(tx+(HENG*blksize-xs*2.5f*blksize)*boxs, ty);
-        ClearRowImage2_2[k]->setScaleX(xs*boxs);
-        ClearRowImage2_2[k]->setScaleY(boxs);
+        ClearRowImage2_2[idx][k]->setColor(1, 1, 1, 0.75f);
+        ClearRowImage2_2[idx][k]->setPosition(tx+(HENG*blksize-xs*2.5f*blksize)*boxs, ty);
+        ClearRowImage2_2[idx][k]->setScaleX(xs*boxs);
+        ClearRowImage2_2[idx][k]->setScaleY(boxs);
         //2的角度要设置成3.1415926f
         }
     }
-    //mRender->EnableAddictiveDraw(false);
 }
 
    
 void AnimationLayerPlayELS::Cancel_ClearRow(int idx)
 {
     if(ClearRowstat[0]<=0) return;
-    ClearRowTimer->cancelTimer();
+    ClearRowTimer[idx]->cancelTimer();
     ClearRowstat[idx]=0;
 }
 void AnimationLayerPlayELS::Cancel_fall(int index)
 {
     if(fallstat[index]<0) return;
     printf("really cancel \n");
-    fallTimer->cancelTimer();
+    fallTimer[index]->cancelTimer();
     fallstat[index]=-1;
 }
 void AnimationLayerPlayELS::New_UseItem(int _itemtype,int _startx,int _endx,int _starty,int _endy)
@@ -242,9 +238,11 @@ void AnimationLayerPlayELS::New_UseItem(int _itemtype,int _startx,int _endx,int 
 
 void AnimationLayerPlayELS::Update(float dt)
 {
-   // int idx=0;
-    RenderDrop(0);
-    Render_ClearRow(0);
+    for(int i=0;i<4;i++)
+    {
+        if(i==0)RenderDrop(i);//只启用主窗口的下落效果
+    Render_ClearRow(i);
+    }
     
 }
 
@@ -256,12 +254,7 @@ void AnimationLayerPlayELS::Loadimages()
     assetbox->LoadResource("Play2.xml");
     
     
-    //下落条动画对象的添加，初始时不显示，故aphla设置为0
-    fallImg=assetbox->GetImage("dropbar.png");
-    fallImage=new GEImage();
-    fallImage->setImage(fallImg);
-    fallImage->setColor(1, 1, 1, 0);
-    this->addChild(fallImage);
+   
     
     
     
@@ -269,27 +262,40 @@ void AnimationLayerPlayELS::Loadimages()
     ClearRowImg1= assetbox->GetImage("clear1.png");
     ClearRowImg2= assetbox->GetImage("clear2.png");
     
+    //4个游戏窗口动画 的初始化
     for(int i=0;i<4;i++)
     {
-    ClearRowImage1[i]=new GEImage();
-    ClearRowImage1[i]->setImage(ClearRowImg1);
-    ClearRowImage1[i]->setColor(1, 1, 1, 0);
-    this->addChild(ClearRowImage1[i]);
-    ClearRowImage2_1[i]=new GEImage();
-    ClearRowImage2_1[i]->setImage(ClearRowImg2);
-    ClearRowImage2_1[i]->setColor(1, 1, 1, 0);
-    this->addChild(ClearRowImage2_1[i]);
-    ClearRowImage2_2[i]=new GEImage();
-    ClearRowImage2_2[i]->setImage(ClearRowImg2);
-    ClearRowImage2_2[i]->setColor(1, 1, 1, 0);
-    this->addChild(ClearRowImage2_2[i]);
+        //下落条动画对象的添加，初始时不显示，故aphla设置为0
+        fallImg=assetbox->GetImage("dropbar.png");
+        fallImage[i]=new GEImage();
+        fallImage[i]->setImage(fallImg);
+        fallImage[i]->setColor(1, 1, 1, 0);
+        this->addChild(fallImage[i]);
+        
+        
+        
+        
+        for(int j=0;j<4;j++)
+        {  ClearRowImage1[i][j]=new GEImage();
+    ClearRowImage1[i][j]->setImage(ClearRowImg1);
+    ClearRowImage1[i][j]->setColor(1, 1, 1, 0);
+    this->addChild(ClearRowImage1[i][j]);
+    ClearRowImage2_1[i][j]=new GEImage();
+    ClearRowImage2_1[i][j]->setImage(ClearRowImg2);
+    ClearRowImage2_1[i][j]->setColor(1, 1, 1, 0);
+    this->addChild(ClearRowImage2_1[i][j]);
+    ClearRowImage2_2[i][j]=new GEImage();
+    ClearRowImage2_2[i][j]->setImage(ClearRowImg2);
+    ClearRowImage2_2[i][j]->setColor(1, 1, 1, 0);
+    this->addChild(ClearRowImage2_2[i][j]);
+        }
     }
 }
 
 
 void AnimationLayerPlayELS::Setconfig()
 {
-    if (true){//mElsMode==ELS_MODE_SINGLE && mBJIdx==0) {
+    if (true){//GameSet->gamemode==ELS_MODE_SINGLE && mBJIdx==0) {
         mainx=54, mainy=2;
     }
     else {

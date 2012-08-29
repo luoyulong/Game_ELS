@@ -12,6 +12,7 @@
 #include "GameEngine.h"
 #include "DeviceIDWrapper.h"
 #include "gameNetCenter.h"
+#include "ELSDefine.h"
 #include "GameLayerPlayELS.h"
 #include "AnimationLayerPlayELS.h"
 #include "PopLayerPlayELS.h"
@@ -29,6 +30,7 @@ public:
    static  GameScenePlayELS* GetInstance();
     
 private:
+    void setoption();
     void buttonCallback(GEObject* pObj);
     
 private:

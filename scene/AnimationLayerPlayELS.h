@@ -59,17 +59,17 @@ private:
     
     bool init;
     
-    GETimer * fallTimer;
+    GETimer * fallTimer[4];//4个游戏窗口 但目前只启用了主窗口一个
     CCImage * fallImg;
-    GEImage * fallImage;
+    GEImage * fallImage[4];//4个游戏窗口 但目前只启用了主窗口一个
     
-    GETimer * ClearRowTimer;
+    GETimer * ClearRowTimer[4];//4个游戏窗口
     CCImage * ClearRowImg1;
     CCImage * ClearRowImg2;
     
-    GEImage * ClearRowImage1[4];
-    GEImage * ClearRowImage2_1[4];
-    GEImage * ClearRowImage2_2[4];
+    GEImage * ClearRowImage1[4][4];//4个游戏窗口每个游戏窗口同时最多消除4行
+    GEImage * ClearRowImage2_1[4][4];
+    GEImage * ClearRowImage2_2[4][4];
     
     
     int mCountDownTimeLeft;//倒计时4秒

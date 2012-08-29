@@ -61,7 +61,7 @@ struct GameSet_type
 {
     EMODE gamemode;
 };
-extern struct GameSet_type GameSet;
+extern struct GameSet_type *GameSet;
 extern  CCSoundBox		*mSND;
 extern int             mWavCombo[8], mWavClear[4], mWavDrop, mWavMove, mWavWin, mWavTurn, mWavLose, 
 mWavLevelup, mWavItemAttack, mWavItemDefense, mWavClick, mWavPeeco;
@@ -77,4 +77,5 @@ extern int	isFirstItem;
 extern int	mItemChoose;//选中了哪个道具，0未选中，1-10对应10个道具，使用道具时用于识别手势。
 extern 		int				mShowItemLimitNoticeStageLeft;//游戏中道具限制的提示，显示的剩余帧数。
 extern GEButton * ItemBLKBt[10];
+extern float gobal_boxx[4],gobal_boxy[4];
 #endif

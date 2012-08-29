@@ -13,7 +13,7 @@
 #define blksize		36.0f
 
 //出现宝石的几率,越大越不容易出现
-static int GOLDENLUCK  =  2;//最开始是50
+static int GOLDENLUCK  =  50;//最开始是50
 static int ItemLimit[10] = {5,5,5,5,5,5,5,5,5,5};
 inline bool cmp_score(const HSCORE *a, const HSCORE *b)
 {
@@ -29,7 +29,7 @@ void GameLayerPlayELS::PlayAutoDownAction(float dt)
 	char ret=0;
 	//自然下落...
 #if ELS_AUTO
-	u8 tmpmode=(mElsMode==ELS_MODE_REPLAY?mElsRepMode:mElsMode);
+	u8 tmpmode=(GameSet->gamemode==ELS_MODE_REPLAY?mElsRepMode:GameSet->gamemode);
 	float tdtime;
 	if (tmpmode==ELS_MODE_NET) 
 		tdtime=DOWN_TIME_NET[mGS[0].level];
@@ -173,7 +173,7 @@ int GameLayerPlayELS::ClearFullRows(int idx, bool ai)
     
     
 	//解锁下一个试炼阵法
-	if (mElsMode==ELS_MODE_SINGLE && mBJIdx!=0) {
+	if (GameSet->gamemode==ELS_MODE_SINGLE && mBJIdx!=0) {
 		//printf("unlock:bjidx=%d topline=%d unbmp=%d\n", mBJIdx, gp->top_line, g_unlock_bmp);
 		if (gp->top_line<=2 && gp->unlock_stage==0) {
 			gp->unlock_stage=MAX_UNLOCK_STAGE;
@@ -288,7 +288,7 @@ void GameLayerPlayELS::Update(float dt)
 	if (mPauseStage>0)
 		mPauseStage--;
 	
-	/*if (mElsMode==ELS_MODE_NET) 
+	/*if (GameSet->gamemode==ELS_MODE_NET) 
 	{
         //发送心跳信号...
 		DoSendHeartBeat(dt);
@@ -319,7 +319,7 @@ void GameLayerPlayELS::Update(float dt)
         }
 	}
 	*/
-    if(mElsMode==ELS_MODE_SINGLE)
+    if(GameSet->gamemode==ELS_MODE_SINGLE)
     {
         //PlayMenuTouchAction();  这里要替代为菜单层
         if(ELS_PAUSE) return;
@@ -328,18 +328,18 @@ void GameLayerPlayELS::Update(float dt)
 		PlayTouchAction();
 		PlayItemTouchAction();
     }
-    /*
-    if (mElsMode==ELS_MODE_AI) {
-        PlayMenuTouchAction();
+    
+    if (GameSet->gamemode==ELS_MODE_AI) {
+     //   PlayMenuTouchAction();
         if(ELS_PAUSE) return;
         if(mGS[0].game_over || mGS[1].game_over) return;
         PlayAutoDownAction(dt);
 		PlayTouchAction();
 		PlayItemTouchAction();
         PlayAIAction(dt);
-    }*/
+    }
     /*
-    if (mElsMode==ELS_MODE_REPLAY) {
+    if (GameSet->gamemode==ELS_MODE_REPLAY) {
         PlayMenuTouchAction();
         if(ELS_PAUSE) return;
         PlayReplayAction();
@@ -354,17 +354,17 @@ void GameLayerPlayELS::Update(float dt)
 	UpdateELS(3);
 	
 	//非网络模式下,第600帧判断是否需要显示hold的帮助
-	/*if (mStage>600 && mElsMode!=ELS_MODE_NET && mElsMode!=ELS_MODE_REPLAY && hasShowHoldHelp==0 && g_options[8]>=0) { //不和hold的提示冲突
+	/*if (mStage>600 && GameSet->gamemode!=ELS_MODE_NET && GameSet->gamemode!=ELS_MODE_REPLAY && hasShowHoldHelp==0 && g_options[8]>=0) { //不和hold的提示冲突
 		if (g_options[9]>0) {
 			g_options[9]*=-1;//暂时标记为-1，以使GameStateReward识别显示道具相关的帮助
 			//暂停游戏，并增加reward-state
 			//ELS_PAUSE=true;
 			GameState* rr=mApp->mGameStates[GAME_STATE_REWARD];
-			if (mElsMode==ELS_MODE_AI || (mElsMode==ELS_MODE_SINGLE && mBJIdx!=0)) {
+			if (GameSet->gamemode==ELS_MODE_AI || (GameSet->gamemode==ELS_MODE_SINGLE && mBJIdx!=0)) {
 				rr->mArrowX = 362;
 				rr->mArrowY = 160;
 			}
-			else if(mElsMode==ELS_MODE_SINGLE && mBJIdx==0) {
+			else if(GameSet->gamemode==ELS_MODE_SINGLE && mBJIdx==0) {
 				rr->mArrowX = 460;
 				rr->mArrowY = 160;
 			}
@@ -406,7 +406,7 @@ inline void GameLayerPlayELS::UpdateELS(int i)
 	if (mGS[i].game_over) return;
 	if (!mGS[i].active) return;
 	
-	u8 tmode=(mElsMode==ELS_MODE_REPLAY)?mElsRepMode:mElsMode;
+	u8 tmode=(GameSet->gamemode==ELS_MODE_REPLAY)?mElsRepMode:GameSet->gamemode;
 	/*
 	if(mGS[i].attack[0]) //检测执行攻击
 	{
@@ -485,7 +485,7 @@ inline void GameLayerPlayELS::UpdateELS(int i)
 	//滑动时间，非直落而下落到底时，MoveBlk把ready_wending减一
 	//触发每次Update减一，减到0时，真正REACH_BOTTOM，又重新置为WENDING
     //网络模式下，只更新自己的ready wending，其他的ready wending是靠消息设置的
-	if (mElsMode!=ELS_MODE_NET || (mElsMode==ELS_MODE_NET&&i==0)) {
+	if (GameSet->gamemode!=ELS_MODE_NET || (GameSet->gamemode==ELS_MODE_NET&&i==0)) {
 		if(mGS[i].ready_wending != WENDING)
 			mGS[i].ready_wending--;
 	}
@@ -493,17 +493,17 @@ inline void GameLayerPlayELS::UpdateELS(int i)
 	ClearFullRows(i, false); //消除填满的行
 	
 }
-void GameLayerPlayELS::FallWithUpdate(int i)
+void GameLayerPlayELS::FallWithUpdate(int args,char * argv)
 {
-    
-    ((AnimationLayerPlayELS *)Annimationlayer)->fallstat[0]=-1;
+    int idx=argv[0];
+    ((AnimationLayerPlayELS *)Annimationlayer)->fallstat[idx]=-1;
     do{
-        if(mGS[0].game_over)
+        if(mGS[idx].game_over)
         break;
-    }while(MoveBlk(DDOWN, 0, false)!=REACH_BOTTOM);
-    NextBlk(0, false);
+    }while(MoveBlk(DDOWN,idx, false)!=REACH_BOTTOM);
+    NextBlk(idx, false);
     TestDDown(0);
-    }
+}
 
 
 
@@ -660,7 +660,7 @@ void GameLayerPlayELS::ResetGstat(int idx)
 			}
 	
 	//初始化各种变量
-    if (mElsMode!=ELS_MODE_AI && idx==0) mGS[idx].level = mNanDu;
+    if (GameSet->gamemode!=ELS_MODE_AI && idx==0) mGS[idx].level = mNanDu;
 	mGS[idx].fullrows[0] = mGS[idx].fullrows[1] =
 	mGS[idx].fullrows[2] = mGS[idx].fullrows[3] = -1;
 	mGS[idx].shield_remain_time	= 0;
@@ -681,7 +681,7 @@ void GameLayerPlayELS::ResetGstat(int idx)
     //根据模式确定本窗口是否active
 	mGS[idx].active=true;
 	/*  comment by lyl
-     if(mElsMode==ELS_MODE_REPLAY)
+     if(GameSet->gamemode==ELS_MODE_REPLAY)
 	{
 		if (mElsRepMode==ELS_MODE_SINGLE) 
 		{
@@ -698,11 +698,11 @@ void GameLayerPlayELS::ResetGstat(int idx)
 	}
 	else 
 	{
-		if (mElsMode==ELS_MODE_SINGLE) 
+		if (GameSet->gamemode==ELS_MODE_SINGLE) 
 		{
 			if (idx>0) mGS[idx].active=false;
 		}
-		else if (mElsMode==ELS_MODE_AI || (mElsMode==ELS_MODE_NET&&isRobotGame())) 
+		else if (GameSet->gamemode==ELS_MODE_AI || (GameSet->gamemode==ELS_MODE_NET&&isRobotGame())) 
 		{
 			if (idx>1) mGS[idx].active=false;
 		}
@@ -713,7 +713,7 @@ void GameLayerPlayELS::ResetGstat(int idx)
     
 	}*/
     
-    mElsMode=ELS_MODE_SINGLE;
+ //   GameSet->gamemode=ELS_MODE_SINGLE;
     if (idx>0) mGS[idx].active=false;
 
 }
@@ -745,7 +745,7 @@ void GameLayerPlayELS::ResetELS()
 {
 	printf("%f, ENTER RESET...\n", CFAbsoluteTimeGetCurrent());
     
-	/*if(mElsMode==ELS_MODE_REPLAY)
+	/*if(GameSet->gamemode==ELS_MODE_REPLAY)
      {
      if (mNanDu==0)
      {
@@ -761,7 +761,7 @@ void GameLayerPlayELS::ResetELS()
      GenRandomBlockQueue(mRandomSeed);
      }
      }
-     else if(mElsMode==ELS_MODE_NET)
+     else if(GameSet->gamemode==ELS_MODE_NET)
      {
      //等待服务器返回随机种子...
      mRandomSeed = 0;
@@ -773,7 +773,7 @@ void GameLayerPlayELS::ResetELS()
     //	}
 	
 	//set goldenluck by mode...
-	/*int emode=(mElsMode==ELS_MODE_REPLAY)?mElsRepMode:mElsMode;
+	/*int emode=(GameSet->gamemode==ELS_MODE_REPLAY)?mElsRepMode:GameSet->gamemode;
      if (emode==ELS_MODE_NET) {
      GOLDENLUCK=50;
      }
@@ -829,16 +829,16 @@ void GameLayerPlayELS::ResetELS()
     
     
     
-	printf("mode=%d mstage=%d\n", mElsMode, mStage);
+	printf("mode=%d mstage=%d\n", GameSet->gamemode, mStage);
 	m4LineCleared = 0;
 	isFirstItem=1;
 	hasShowHoldHelp=0;
 	
-	if(mElsMode==ELS_MODE_AI)
+	if(GameSet->gamemode==ELS_MODE_AI)
 		g_gamecount[0][mNanDu][0]++;
-	if(mElsMode==ELS_MODE_SINGLE)
+	if(GameSet->gamemode==ELS_MODE_SINGLE)
 		g_gamecount[1][mNanDu][0]++;
-	if(mElsMode!=ELS_MODE_REPLAY)
+	if(GameSet->gamemode!=ELS_MODE_REPLAY)
 		g_recact_count=0;
 	mNetDrawStr[0]=0;
 	
@@ -852,7 +852,7 @@ void GameLayerPlayELS::ResetELS()
 	//memcpy(g_xunzhang4saverep, g_xunzhang, sizeof(g_xunzhang));
 	WriteScore();
 	
-	printf("\n\n\n\n\n\n %f, LEAVE RESET...mElsMode=%d\n\n\n\n\n", CFAbsoluteTimeGetCurrent(), mElsMode);
+	printf("\n\n\n\n\n\n %f, LEAVE RESET...GameSet->gamemode=%d\n\n\n\n\n", CFAbsoluteTimeGetCurrent(), GameSet->gamemode);
 }
 
 //使用道具时调用...
@@ -872,7 +872,7 @@ bool GameLayerPlayELS::UseItem(int idx, int itemidx,int target)
 		sprintf(t, "PI%d%d", target, itemidx);
 		//mApp->TraceLog(t);
 		
-		if (mElsMode==ELS_MODE_NET) {//对战状态下改变g_item_num[10]的值
+		if (GameSet->gamemode==ELS_MODE_NET) {//对战状态下改变g_item_num[10]的值
 			if (g_item_num[itemidx-1]>0) {
 				g_item_num[itemidx-1]--;
 				mItemLimit[itemidx-1]--;
@@ -936,15 +936,16 @@ void GameLayerPlayELS::PlayActionBase(char *act, int index)
 	char tmp[64];
 	char aline[2],aseed[32];
 	int ialine, iaseed;
-	u8 tmode=(mElsMode==ELS_MODE_REPLAY)?mElsRepMode:mElsMode;
+	u8 tmode=(GameSet->gamemode==ELS_MODE_REPLAY)?mElsRepMode:GameSet->gamemode;
     
+    if(index==0)
    Annimation_layer->Cancel_fall(index);
 
 
 	switch (aiact)
 	{
 		case 'A':
-			if (mElsMode==ELS_MODE_REPLAY) break;
+			if (GameSet->gamemode==ELS_MODE_REPLAY) break;
 			aline[0]=act[1],aline[1]=0;
 			sprintf(aseed, "%s", &act[2]);
 			sscanf(aseed, "%d", &iaseed);
@@ -957,7 +958,7 @@ void GameLayerPlayELS::PlayActionBase(char *act, int index)
 			RecordAction(0, tmp);
 			break;
 		case 'K':
-			//if (mElsMode==ELS_MODE_REPLAY) break;
+			//if (GameSet->gamemode==ELS_MODE_REPLAY) break;
 			aline[0]=act[1],aline[1]=0;
 			sprintf(aseed, "%s", &act[2]);
 			sscanf(aseed, "%d", &iaseed);
@@ -965,7 +966,7 @@ void GameLayerPlayELS::PlayActionBase(char *act, int index)
 			//Attack(index, ialine, iaseed);
 			break;
 		case 'C':
-			if (mElsMode==ELS_MODE_REPLAY && (index==0)) break;
+			if (GameSet->gamemode==ELS_MODE_REPLAY && (index==0)) break;
 			int f0,f1,f2,f3,co;
             sscanf(&act[1], "%d.%d.%d.%d.%d", &f0, &f1, &f2, &f3, &co);
 			mGS[index].fullrows[0]=f0;
@@ -982,7 +983,7 @@ void GameLayerPlayELS::PlayActionBase(char *act, int index)
 			ProcessClearRow(index, false, false);
             break;
 		case 'Z':
-			if (mElsMode==ELS_MODE_REPLAY) break;
+			if (GameSet->gamemode==ELS_MODE_REPLAY) break;
 			mGS[index].ready_wending=-1;
 			if(MoveBlk(DOWN, index, false)==REACH_BOTTOM)
 				NextBlk(index, false);
@@ -1087,7 +1088,7 @@ void GameLayerPlayELS::PlayActionBase(char *act, int index)
 			sscanf(is, "%x", &iid);
 			uid=atoi(us);
 			rid=atoi(rs);
-			tmode=(mElsMode==ELS_MODE_REPLAY)?mElsRepMode:mElsMode;
+			tmode=(GameSet->gamemode==ELS_MODE_REPLAY)?mElsRepMode:GameSet->gamemode;
 			if(GetIdxBySeatId(rid)==0 || tmode!=ELS_MODE_NET)
 			{
 				//如果接收者是自己，则发一个回馈消息I...
@@ -1274,7 +1275,7 @@ void GameLayerPlayELS::Attack(int idx, int line, int spaceseed)
 				if(yy%GOLDENLUCK==0)//产生一个道具
 				{	
 					int itemOdd=(randomZ(mStage, "ATT")/10)%100;
-					int emode=(mElsMode==ELS_MODE_REPLAY)?mElsRepMode:mElsMode;
+					int emode=(GameSet->gamemode==ELS_MODE_REPLAY)?mElsRepMode:GameSet->gamemode;
 					if (emode==ELS_MODE_NET)//网络模式下只产生-1，-2两种道具，机率分别为70%，30%
 					{
 						tgrid[ZONG-1-i][2+j]=110;
@@ -1401,7 +1402,7 @@ void GameLayerPlayELS::ProcessClearRow(int idx, bool ai, bool isLocalClear)
 			if(gp->combo>gp->max_combo)
 			{
 				gp->max_combo = gp->combo;
-				if (mElsMode==ELS_MODE_NET) 
+				if (GameSet->gamemode==ELS_MODE_NET) 
 					SendMaxCombo(gp->combo, idx);
 			}
 			if(!ai)
@@ -1416,7 +1417,7 @@ void GameLayerPlayELS::ProcessClearRow(int idx, bool ai, bool isLocalClear)
 		if(!ai)
 		{
 			//发送消行的网络命令...
-			if (idx==0 && !isRobotGame() && mElsMode==ELS_MODE_NET && isLocalClear)
+			if (idx==0 && !isRobotGame() && GameSet->gamemode==ELS_MODE_NET && isLocalClear)
 			{
 				char tmp[64];
 				if (gp->full_rows_count==1) sprintf(tmp, "C%d.0.0.0.%d", gp->fullrows[0], gp->combo);
@@ -1461,13 +1462,13 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
 	
 	gp = &mGS[idx];
 	
-	//if (mElsMode == ELS_MODE_NET && mGS[idx].game_over) 
+	//if (GameSet->gamemode == ELS_MODE_NET && mGS[idx].game_over) 
 	//	SetNetStateSelfOver();
     
     
 	char mtmp[16];
 	sprintf(mtmp, "MOVE=%d", dir);
-	if (ai==false && mElsMode==ELS_MODE_NET)
+//	if (ai==false && GameSet->gamemode==ELS_MODE_NET)
 		//DumpELS(idx, mtmp);
 	
 	if(gp->game_over)
@@ -1552,7 +1553,7 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
 						else
 						{
 							gp->ready_wending=WENDING;
-							u8 tmode=(mElsMode==ELS_MODE_REPLAY)?mElsRepMode:mElsMode;
+							u8 tmode=(GameSet->gamemode==ELS_MODE_REPLAY)?mElsRepMode:GameSet->gamemode;
 							//发送“粘住”消息...
 							if (tmode==ELS_MODE_NET && idx==0)
 							{
@@ -1604,7 +1605,7 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
 										if (randomResult%GOLDENLUCK==0) {//此时randomResult已经是10的整数倍
 											int itemOdd=(randomResult/10)%100;
                                             printf("itemOdd is %d\n",itemOdd);
-											int emode=(mElsMode==ELS_MODE_REPLAY)?mElsRepMode:mElsMode;
+											int emode=(GameSet->gamemode==ELS_MODE_REPLAY)?mElsRepMode:GameSet->gamemode;
 											if (emode==ELS_MODE_NET)//网络模式下只产生-1，-2两种道具，机率分别为70%，30%
 											{
 											}
@@ -1688,7 +1689,7 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
 					}
 					
 					UpdateColHoleTop(idx, 2, 11);
-					u8 tmode=(mElsMode==ELS_MODE_REPLAY)?mElsRepMode:mElsMode;
+					u8 tmode=(GameSet->gamemode==ELS_MODE_REPLAY)?mElsRepMode:GameSet->gamemode;
                     if (tmode==ELS_MODE_NET && idx!=0 /*&& !isRobotGame()*/)
                     {    
                         gp->combo=0;
@@ -1795,12 +1796,12 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
 	if (g_options[0]) mSND->SetMusicVolume(5);
 	
 	//网络对战模式，向服务器发送over消息...
-	if (mElsMode==ELS_MODE_NET) {
+	if (GameSet->gamemode==ELS_MODE_NET) {
 		SendOver(idx);
 	}
 	
 	//冒险模式...
-	if(mElsMode==ELS_MODE_SINGLE && mBJIdx!=0)
+	if(GameSet->gamemode==ELS_MODE_SINGLE && mBJIdx!=0)
 	{
 		if (mAdventureWin) {
 			mGS[0].score+=10*(g_bmp_time[mBJIdx]-timeused);
@@ -1826,11 +1827,11 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
 	}
 	
 	//本地对战模式（AI模式）...
-	if(idx==1 && mElsMode!=ELS_MODE_NET)
+	if(idx==1 && GameSet->gamemode!=ELS_MODE_NET)
 	{
 		mGS[0].score+=1000*(mNanDu+1);
 		if (g_options[1]) mSND->PlaySound(mWavWin);
-		if(mElsMode == ELS_MODE_AI)
+		if(GameSet->gamemode == ELS_MODE_AI)
 		{
 			g_gamecount[0][mNanDu][1]++;
 			float wincount, tcount, winrate;
@@ -1844,7 +1845,7 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
 			if (mNanDu==3 && wincount>=30) 
 				SetXunZhang(0);
 		}
-		if(mElsMode == ELS_MODE_SINGLE)
+		if(GameSet->gamemode == ELS_MODE_SINGLE)
 			g_gamecount[0][mNanDu][1]++;
 		WriteScore();
 	}
@@ -1854,10 +1855,10 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
     
 	
 	//计算分数本地排行榜...
-	if((mElsMode==ELS_MODE_SINGLE) || (mElsMode==ELS_MODE_AI))
+	if((GameSet->gamemode==ELS_MODE_SINGLE) || (GameSet->gamemode==ELS_MODE_AI))
 	{
 		vector<HSCORE*> *tmp;
-		//if(mElsMode==ELS_MODE_SINGLE)
+		//if(GameSet->gamemode==ELS_MODE_SINGLE)
 		tmp=&g_mvHS;
 		size_t l;
 		HSCORE *phs = new HSCORE;
@@ -1889,7 +1890,7 @@ inline MSTAT GameLayerPlayELS::MoveBlk(MDIR dir, int idx, bool ai)
 			printf("need write score for new record\n");
 			WriteScore();
 		}
-		if (mElsMode==ELS_MODE_SINGLE && mBJIdx==0)
+		if (GameSet->gamemode==ELS_MODE_SINGLE && mBJIdx==0)
 			mApp->isNewScore=mGS[0].score*100;
 	}
 }
@@ -1899,7 +1900,7 @@ void GameLayerPlayELS::TestAchievement(int clear)
 {
 	//return;
 	//检测CLASSIC和ADVENTURE
-	if (mElsMode==ELS_MODE_SINGLE) {
+	if (GameSet->gamemode==ELS_MODE_SINGLE) {
 		if (mBJIdx==0) {//classic
 			if (clear > 0) {//测试消4行
 				printf("classic clear is :%d, m4LineCleared is:%d\n",clear,m4LineCleared);
@@ -1963,7 +1964,7 @@ void GameLayerPlayELS::TestAchievement(int clear)
 	}//end SINGLE
 	
 	//检测NET
-	if (mElsMode==ELS_MODE_NET) {
+	if (GameSet->gamemode==ELS_MODE_NET) {
 		//printf("\n\nwin id:%d count:%d\n\n",g_net_achieve,g_seats[g_net_achieve].wincount);
 		if (clear > 0) {//测试消行
 			if (clear!=4)
@@ -2026,7 +2027,7 @@ void GameLayerPlayELS::TestAchievement(int clear)
 	}//end NET
 	
 	//检测AI
-	if (mElsMode==ELS_MODE_AI) {
+	if (GameSet->gamemode==ELS_MODE_AI) {
 		int achieveAdj;
 		if (mNanDu==0)//easy
 			achieveAdj=7;
@@ -2099,12 +2100,12 @@ void GameLayerPlayELS::ProcessOver(int idx, bool ai)
 	if (g_options[0]) mSND->SetMusicVolume(5);
 	
 	//网络对战模式，向服务器发送over消息...
-	if (mElsMode==ELS_MODE_NET) {
+	if (GameSet->gamemode==ELS_MODE_NET) {
 	//	SendOver(idx);
 	}
 	
 	//冒险模式...
-	if(mElsMode==ELS_MODE_SINGLE && mBJIdx!=0)
+	if(GameSet->gamemode==ELS_MODE_SINGLE && mBJIdx!=0)
 	{
 		if (mAdventureWin) {
 			mGS[0].score+=10*(g_bmp_time[mBJIdx]-timeused);
@@ -2132,11 +2133,11 @@ void GameLayerPlayELS::ProcessOver(int idx, bool ai)
 	}
 	
 	//本地对战模式（AI模式）...
-	if(idx==1 && mElsMode!=ELS_MODE_NET)
+	if(idx==1 && GameSet->gamemode!=ELS_MODE_NET)
 	{
 		mGS[0].score+=1000*(mNanDu+1);
 		if (g_options[1]) mSND->PlaySound(mWavWin);
-		if(mElsMode == ELS_MODE_AI)
+		if(GameSet->gamemode == ELS_MODE_AI)
 		{
 			g_gamecount[0][mNanDu][1]++;
 			float wincount, tcount, winrate;
@@ -2150,7 +2151,7 @@ void GameLayerPlayELS::ProcessOver(int idx, bool ai)
 			if (mNanDu==3 && wincount>=30) 
 				SetXunZhang(0);*/
 		}
-		if(mElsMode == ELS_MODE_SINGLE)
+		if(GameSet->gamemode == ELS_MODE_SINGLE)
 			g_gamecount[0][mNanDu][1]++;
 		WriteScore();
 	}
@@ -2160,10 +2161,10 @@ void GameLayerPlayELS::ProcessOver(int idx, bool ai)
     
 	
 	//计算分数本地排行榜...
-	if((mElsMode==ELS_MODE_SINGLE) || (mElsMode==ELS_MODE_AI))
+	if((GameSet->gamemode==ELS_MODE_SINGLE) || (GameSet->gamemode==ELS_MODE_AI))
 	{
 		vector<HSCORE*> *tmp;
-		//if(mElsMode==ELS_MODE_SINGLE)
+		//if(GameSet->gamemode==ELS_MODE_SINGLE)
 		tmp=&g_mvHS;
 		size_t l;
 		HSCORE *phs = new HSCORE;
@@ -2195,7 +2196,7 @@ void GameLayerPlayELS::ProcessOver(int idx, bool ai)
 			printf("need write score for new record\n");
 			WriteScore();
 		}
-	/*	if (mElsMode==ELS_MODE_SINGLE && mBJIdx==0)
+	/*	if (GameSet->gamemode==ELS_MODE_SINGLE && mBJIdx==0)
 			mApp->isNewScore=mGS[0].score*100;
 	*/}
 }

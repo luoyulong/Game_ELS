@@ -53,7 +53,7 @@ void GameLayerPlayELS::Render(CCRenderBox* Render)
     RenderHighLight();						//绘制屏幕上方变幻彩灯...
 	RenderReplay();							//绘制replay标识,仅在回放模式下生效...
 	//printf("g_net_achieve is:%d\n",g_net_achieve);
-	if (mElsMode==ELS_MODE_NET && g_net_achieve!=-1)
+	if (GameSet->gamemode==ELS_MODE_NET && g_net_achieve!=-1)
 		TestAchievement();
 */
     //RenderItem();							//绘制道具
@@ -82,7 +82,7 @@ void GameLayerPlayELS::Render(CCRenderBox* Render)
 inline void GameLayerPlayELS::RenderGameFrame()
 {
 	RenderMain(0, mainx, mainy, 1.0f,mRender);		
-	u8 tmpmode=(mElsMode==ELS_MODE_REPLAY?mElsRepMode:mElsMode);
+	u8 tmpmode=(GameSet->gamemode==ELS_MODE_REPLAY?mElsRepMode:GameSet->gamemode);
 	
 	if(tmpmode==ELS_MODE_SINGLE && mBJIdx==0)
 	{
@@ -96,7 +96,7 @@ inline void GameLayerPlayELS::RenderGameFrame()
 	if (tmpmode==ELS_MODE_AI)
 	{
 		RenderMain(1, sidex1,   sidey1, sidesc,mRender);
-		//RenderAiRightSide();
+		
 	}
 	if (tmpmode==ELS_MODE_NET) 
 	{
@@ -158,11 +158,7 @@ void GameLayerPlayELS::RenderMain(int idx, float boxx, float boxy, float boxs,CC
 	}
 	//游戏框
 	mRender->SetColor(1, 1, 1, 0.8f);
-	/*if(idx==0)
-		mRender->RenderImage(mBgTK, boxx+237, boxy+467+get_adjy_bygrect(idx));
-	else 
-		mRender->RenderImage(mBgTKSmall, boxx+77, boxy+173.0f+get_adjy_bygrect(idx)*boxs);
-	*/
+	
     
     
 	//方块画在框的下面

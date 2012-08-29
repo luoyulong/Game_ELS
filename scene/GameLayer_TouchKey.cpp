@@ -184,9 +184,9 @@ void GameLayerPlayELS::touchesBegan(GESet *pTouches, GEEvent *pEvent)
 		return;
 	}*/
 	
-	if (mElsMode!=ELS_MODE_NET) 
+	if (GameSet->gamemode!=ELS_MODE_NET) 
 	{
-		if (mElsMode==ELS_MODE_REPLAY) {
+		if (GameSet->gamemode==ELS_MODE_REPLAY) {
 			//replay over
 			if(g_recact_index>=g_recact_count+1)
 			{  
@@ -224,18 +224,18 @@ void GameLayerPlayELS::touchesBegan(GESet *pTouches, GEEvent *pEvent)
 		}
 	}
 	
-	if(mElsMode == ELS_MODE_NET && (GetNetState()==NET_STATE_ENTERROOMOK || GetNetState()==NET_STATE_WAITREADY || GetNetState()==NET_STATE_READYOK)) {
+	if(GameSet->gamemode == ELS_MODE_NET && (GetNetState()==NET_STATE_ENTERROOMOK || GetNetState()==NET_STATE_WAITREADY || GetNetState()==NET_STATE_READYOK)) {
 		int k=touch_key(ELSTOUCH_NETR, touch_x, touch_y);
 		printf("wait net ready touch:%d\n", k);
 		return;
 	}
 	
-	if(mElsMode == ELS_MODE_NET && GetNetState()==NET_STATE_INIT) {
+	if(GameSet->gamemode == ELS_MODE_NET && GetNetState()==NET_STATE_INIT) {
 		int k=touch_key(ELSTOUCH_NETS, touch_x, touch_y);
 		printf("wait net select touch:%d\n", k);
 		return;
 	}
-	if (mElsMode == ELS_MODE_NET && GetNetState()==NET_STATE_LOGINOK && isFriendRequest()) {
+	if (GameSet->gamemode == ELS_MODE_NET && GetNetState()==NET_STATE_LOGINOK && isFriendRequest()) {
 		char of[20][64];
 		int ofcount=GetOnlineFriend(of);
 		int k=touch_key_selfriend(ofcount, touch_x, touch_y);
@@ -330,20 +330,20 @@ void GameLayerPlayELS::touchesEnded(GESet *pTouches, GEEvent *pEvent)
 	//检测mItemTarget
 	//每次Touch结束时检测模mItemTarget，如果此时mItemChoose！=0,则检测到目标后立即使用道具。
 	if (mItemChoose != 0) {
-		if (mElsMode == ELS_MODE_NET && mItemLimit[mItemChoose-1]<=0) {
+		if (GameSet->gamemode == ELS_MODE_NET && mItemLimit[mItemChoose-1]<=0) {
 			mShowItemLimitNoticeStageLeft=ITEM_LIMIT_NOTICE_STAGE;
 			mItemChoose=0;
 			mItemTarget=4;
 			return;
 		}
-		if (mElsMode == ELS_MODE_SINGLE || mElsMode == ELS_MODE_AI || mElsMode == ELS_MODE_NET)
+		if (GameSet->gamemode == ELS_MODE_SINGLE || GameSet->gamemode == ELS_MODE_AI || GameSet->gamemode == ELS_MODE_NET)
 			if (touch_x > mainx && touch_x < mainx+500)//&& touch_y < MAIN_TOUCH_Y) 
 				mItemTarget = 0;
-		if (mElsMode == ELS_MODE_AI || mElsMode == ELS_MODE_NET)
+		if (GameSet->gamemode == ELS_MODE_AI || GameSet->gamemode == ELS_MODE_NET)
 			if (touch_x > 215 && touch_x < 280 && touch_y > 50 && touch_y < 170)
 				mItemTarget = 1;
 		
-		if (mElsMode == ELS_MODE_NET) {
+		if (GameSet->gamemode == ELS_MODE_NET) {
             if (touch_x > 215 && touch_x < 280 && touch_y > 190 && touch_y < 310)
                 mItemTarget = 2;
             if (touch_x > 215 && touch_x < 280 && touch_y > 330 && touch_y < 450)
@@ -362,7 +362,7 @@ void GameLayerPlayELS::touchesEnded(GESet *pTouches, GEEvent *pEvent)
 				//给别人使用道具...
 				sprintf(tmp, "Y%d%d%02x", GetSeatIdByidx(0), GetSeatIdByidx(mItemTarget), mItemChoose);
 				RecordAction(0, tmp);
-				if (mElsMode==ELS_MODE_NET && !isRobotGame()) {
+				if (GameSet->gamemode==ELS_MODE_NET && !isRobotGame()) {
 					mItemTarget=4;
 					mItemChoose=0;
 					//如果是网络对战模式则不执行,而是等到回馈后再执行，保证时序...
@@ -375,7 +375,7 @@ void GameLayerPlayELS::touchesEnded(GESet *pTouches, GEEvent *pEvent)
 		if (mItemTarget >0 && mItemTarget<4 && mItemChoose>6 && mItemChoose<=10) {//攻击道具6-10只能给敌人使用，不能给自己使用，防止误操作。
 			sprintf(tmp, "Y%d%d%02x", GetSeatIdByidx(0), GetSeatIdByidx(mItemTarget), mItemChoose);
 			RecordAction(0, tmp);
-			if (mElsMode==ELS_MODE_NET) {
+			if (GameSet->gamemode==ELS_MODE_NET) {
 				mItemTarget=4;
 				mItemChoose=0;
 				printf("use item online..\n\n");
@@ -443,7 +443,7 @@ void GameLayerPlayELS::touchesMoved(GESet *pTouches, GEEvent *pEvent)
         return;
 	}
 	/*
-	if (mElsMode == ELS_MODE_NET && GetNetState()==NET_STATE_SELFOVER) 
+	if (GameSet->gamemode == ELS_MODE_NET && GetNetState()==NET_STATE_SELFOVER) 
 	{
 		return;
 	}*/
@@ -564,7 +564,7 @@ void GameLayerPlayELS::PlayItemTouchAction()
 	//处理使用道具
 	int n;
 	for (int i=0; i<10; i++) {
-		if (mElsMode==ELS_MODE_NET)
+		if (GameSet->gamemode==ELS_MODE_NET)
 			n = g_item_num[i];
 		else 
 			n = mItemNum[i];
@@ -666,7 +666,7 @@ void GameLayerPlayELS::PlayTouchAction()
 	
 	char ret;
 	if ((ret=GetTouchAct())) {
-		if(mElsMode!=ELS_MODE_REPLAY)
+		if(GameSet->gamemode!=ELS_MODE_REPLAY)
 		{
 			char ts[4];
 			ts[0]=ret, ts[1]=0;

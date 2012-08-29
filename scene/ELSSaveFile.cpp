@@ -16,8 +16,8 @@ static FILE  *g_rep;
 //纪录动作，用于replay
 void GameLayerPlayELS::RecordAction(int idx, const char *act)
 {
-	if(mElsMode == ELS_MODE_REPLAY) return;
-	/*if (mElsMode == ELS_MODE_NET) 
+	if(GameSet->gamemode == ELS_MODE_REPLAY) return;
+	/*if (GameSet->gamemode == ELS_MODE_NET) 
 	{
 		if (idx==0 && !isRobotGame())
 		{
@@ -69,7 +69,7 @@ void GameLayerPlayELS::RecordAction(int idx, const char *act)
 	}
 	//fseek(g_rep, 0, SEEK_END);
 	//printf("cur file point=%ld\n", ftell(g_rep));
-	unsigned int mode=mBJIdx*10000+mElsMode*1000+mTheme*100+mNanDu*10;
+	unsigned int mode=mBJIdx*10000+GameSet->gamemode*1000+mTheme*100+mNanDu*10;
 	fseek(g_rep, 0, SEEK_SET);
 	for (int i=0; i<4; i++) 
 		fwrite(&g_seats[i], sizeof(ELSUSER), 1, g_rep);

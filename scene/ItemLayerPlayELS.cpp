@@ -44,7 +44,7 @@ void ItemLayerPlayELS::DisplayItems()
         this->addChild(ItemBLKBt[itemidx]); 
         
      
-      //  if(mElsMode!=ELS_MODE_NET)
+      //  if(GameSet->gamemode!=ELS_MODE_NET)
         //    mRender->RenderImage(mTempItem, 
           //                       Game_layer->GetButtonRecItem(itemidx, 0)+Game_layer->GetButtonRecItem(itemidx, 2)-15, 
             //                     Game_layer->GetButtonRecItem(itemidx, 1)+Game_layer->GetButtonRecItem(itemidx, 3)-2);
@@ -71,7 +71,7 @@ void ItemLayerPlayELS::RenderItem()
         
         if (_itemstage==0) {
             if (_itemtype<20) {//如果是得道具，那么在stage=0时得到这个道具，把道具数量+1
-                if (mElsMode==ELS_MODE_NET)
+                if (GameSet->gamemode==ELS_MODE_NET)
                     g_item_num[_itemtype-1]++;
                 else 
                     Game_layer->mItemNum[_itemtype-1]++;
@@ -80,7 +80,7 @@ void ItemLayerPlayELS::RenderItem()
             Annimation_layer->removeChild(_display_handler);
             it=Game_layer->mItemFly.erase(it);
             //判断是否是非网络模式下的第一个道具
-            if (mElsMode!=ELS_MODE_NET && mElsMode!=ELS_MODE_REPLAY && isFirstItem==1 && g_options[9]>=0) { //不和hold的提示冲突
+            if (GameSet->gamemode!=ELS_MODE_NET && GameSet->gamemode!=ELS_MODE_REPLAY && isFirstItem==1 && g_options[9]>=0) { //不和hold的提示冲突
                 if (g_options[8]>0) {
                     g_options[8]*=-1;//暂时标记为<0，以使GameStateReward识别显示道具相关的帮助
                      //暂停游戏，并增加reward-state
@@ -129,8 +129,8 @@ void ItemLayerPlayELS::RenderItem()
     mRender->SetColor(1, 1, 1, 1);
     //绘制选中的道具金黄色的底色
     if (mItemChoose!=0) {
-        if ((mElsMode==ELS_MODE_NET && g_item_num[mItemChoose-1]>0)
-            ||(mElsMode!=ELS_MODE_NET && Game_layer->mItemNum[mItemChoose-1]>0)) {
+        if ((GameSet->gamemode==ELS_MODE_NET && g_item_num[mItemChoose-1]>0)
+            ||(GameSet->gamemode!=ELS_MODE_NET && Game_layer->mItemNum[mItemChoose-1]>0)) {
             mRender->SetColor(1, 1, 1, 1);
             mRender->EnableAddictiveDraw(true);
             mRender->RenderImage(mItemSelected, (Game_layer->GetButtonRecItem(mItemChoose-1, 0)+Game_layer->GetButtonRecItem(mItemChoose-1, 2)) -15, 
@@ -143,9 +143,9 @@ void ItemLayerPlayELS::RenderItem()
     {        //显示道具还剩多少数量
         //char itemnum[5];
         int  n;
-        if (mElsMode==ELS_MODE_NET) //网络对战，数据取自ELSSaveData。
+        if (GameSet->gamemode==ELS_MODE_NET) //网络对战，数据取自ELSSaveData。
             n = g_item_num[itemidx];
-        //else if (mElsMode==ELS_MODE_AI)//本地模式，则每局都是重新计算。
+        //else if (GameSet->gamemode==ELS_MODE_AI)//本地模式，则每局都是重新计算。
         else 
             n = Game_layer->mItemNum[itemidx];
         
@@ -164,13 +164,13 @@ void ItemLayerPlayELS::RenderItem()
                 Game_layer->GetButtonRecItem(itemidx, 1)+Game_layer->GetButtonRecItem(itemidx, 3)+ay, 0.0f, 0.85f, 0.85f);
         mRender->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
         //如果网络状态下道具已达到使用限制，则显示禁止使用的图标
-        if(mElsMode==ELS_MODE_NET && Game_layer->mItemLimit[itemidx]<=0)
+        if(GameSet->gamemode==ELS_MODE_NET && Game_layer->mItemLimit[itemidx]<=0)
             mRender->RenderImage(Game_layer->mCanNotUseItem, 
                                  Game_layer->GetButtonRecItem(itemidx, 0)+Game_layer->GetButtonRecItem(itemidx, 2)-5,
                                  Game_layer->GetButtonRecItem(itemidx, 1)+Game_layer->GetButtonRecItem(itemidx, 3));
     }
     //显示道具使用限制的提示
-    if (mElsMode==ELS_MODE_NET && mShowItemLimitNoticeStageLeft>0) {
+    if (GameSet->gamemode==ELS_MODE_NET && mShowItemLimitNoticeStageLeft>0) {
         mShowItemLimitNoticeStageLeft--;//不在Update里判断了
         mRender->RenderImage(mItemLimitNotice, 320, 900);
     }

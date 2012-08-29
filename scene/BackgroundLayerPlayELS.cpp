@@ -21,7 +21,7 @@ BackgroundLayerPlayELS::BackgroundLayerPlayELS()
     GEImage * m_pBackGround = new GEImage();
     m_pBackGround->setImage("playback.png");
     m_pBackGround->setPosition(320,480);   
-  //  this->addChild(m_pBackGround);   
+   this->addChild(m_pBackGround);   
     
    
     
@@ -29,23 +29,63 @@ BackgroundLayerPlayELS::BackgroundLayerPlayELS()
     
 }
 
-
+void BackgroundLayerPlayELS::DisplayMain(int idx,float boxx,float boxy,float boxs)
+{
+    Playboard[idx]=new GEImage();
+    if(idx==0)
+    {
+    Playboard[idx]->setImage("kuang.png");
+    Playboard[idx]->setPosition(mainx+237,mainy+471+Game_layer->get_adjy_bygrect(0));
+    this->addChild(Playboard[idx]);
+    }
+    else if(idx<=4)
+    {
+    Playboard[idx]->setImage("skuang.png");
+   Playboard[idx]->setPosition(boxx+420,boxy+173.0f+Game_layer->get_adjy_bygrect(idx)*boxs);   
+  //   Playboard[idx]->setPosition(mainx+237,mainy+471+Game_layer->get_adjy_bygrect(0));
+        this->addChild(Playboard[idx]);
+    }
+    assert(idx>=0&&idx<=3);
+    
+}
 void BackgroundLayerPlayELS::Background_playboard(int idx,float boxx,float boxy,float boxs)
 {
+    DisplayMain(0, boxx, boxy, boxs);
+    u8 tmpmode=(GameSet->gamemode==ELS_MODE_REPLAY?mElsRepMode:GameSet->gamemode);
+	if(tmpmode==ELS_MODE_SINGLE )//&& mBJIdx==0)
+	{
+		//RenderClassicRightSide();
+	}
+	if (tmpmode==ELS_MODE_SINGLE)// && mBJIdx!=0) 
+	{
+		//RenderAdventureRightSide();
+		
+	}
+	if (tmpmode==ELS_MODE_AI)
+	{
+		DisplayMain(1, boxx, boxy, boxs);
+	}
+	/*if (tmpmode==ELS_MODE_NET) 
+	{
+		RenderMain(1, sidex1,   sidey1, sidesc,mRender);
+		RenderMain(2, sidex2,   sidey2,	sidesc,mRender);
+		RenderMain(3, sidex3,   sidey3, sidesc,mRender);
+		mRender->SetColor(1,1,1,tablestra);
+		char tmp[256];
+		GetTableString(tmp);
+		mLFont->DrawString(tmp, tablestrx, tablestry);
+	}
     
-    for (int i=0; i<4; i++) {
-        Playboard[i]=new GEImage();
-        if(!i)Playboard[i]->setImage("kuang.png");
-        else Playboard[i]->setImage(mAssetCommon->GetImage("skuang.png"));
-    }
-    Playboard[0]->setPosition(mainx+237,mainy+471+Game_layer->get_adjy_bygrect(0));
-    this->addChild(Playboard[0]);
+    
+    */
+    
+    
     
     GEText * mBFont=new GEText();
     GEText * mLFont=new GEText();
     
     
-    u8 tmode=(mElsMode==ELS_MODE_REPLAY)?mElsRepMode:mElsMode;
+    u8 tmode=(GameSet->gamemode==ELS_MODE_REPLAY)?mElsRepMode:GameSet->gamemode;
     /*if (tmode==ELS_MODE_NET) 
 	{
 		if (Game_layer->isRobotGame()) 

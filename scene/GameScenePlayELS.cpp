@@ -46,6 +46,14 @@ GameScenePlayELS::GameScenePlayELS()
     
     // backgrounds
      
+    GameSet=new GameSet_type();
+    GameSet->gamemode=ELS_MODE_AI;
+    
+    gobal_boxx[0]=mainx;
+    gobal_boxy[0]=mainy;
+    gobal_boxx[1]=mainx;
+    gobal_boxy[1]=mainy;
+    
     
     //new other layers
     new GameLayerPlayELS();

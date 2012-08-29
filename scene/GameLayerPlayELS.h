@@ -77,7 +77,7 @@ private:
     bool UseItem(int idx, int itemidx,int target);                  //使用道具
     void  ProcessClearRow(int idx, bool ai, bool isLocalClear);
    public:
-    void FallWithUpdate(int i);//i repreasent index of mGS
+    void FallWithUpdate(int ,char *);//int repreasent index of mGS
     void FallWithUpdate_0();// repreasent mGS 0 
     void FallWithUpdate_1();
     void FallWithUpdate_2();//
@@ -156,6 +156,17 @@ private:
     void  RenderNextSave(CCRenderBox* mRender);
     void  RenderScore();
     void  drawnum(int num, float x, float y, float angle=0, float xs=1.0f, float ys=1.0f);
+    
+    
+    
+    //===================单机的AI相关函数 相关文件:GameLayer_AI.cpp=================
+    int   GetGridScore(int cx, int cy, int cf, int nf);		//布局评分
+    char  GetAIAct();										//如果自动运行动作序列为空则计算生成指令序列，否则返回动作指令
+    void  PlayAIAction(float dt);							//定期取AI动作并执行
+    void  AI_F3(char *a, s8 cx, s8 cy, s8 cf, int *ms);
+    void  AI_F2(char *a, s8 cx, s8 cy, s8 cf, int *ms);
+    void  AI_F1(char *a, s8 cx, s8 cy, s8 cf, int *ms, 
+                void (GameLayerPlayELS::*fs)(char *, s8, s8, s8, int *));
     
     
      //==================background================

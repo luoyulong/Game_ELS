@@ -29,6 +29,7 @@ public:
    void Background_Snow(CCRenderBox* mRender,int dir);
     void Render(CCRenderBox* mRender);
     void Background_playboard(int idx,float boxx,float boxy,float boxs);
+    void DisplayMain(int idx,float boxx,float boxy,float boxs);
 private:
     GEImage * Playboard[4];
     GEImage * Namebk;
